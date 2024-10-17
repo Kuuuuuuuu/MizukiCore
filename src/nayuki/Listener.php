@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MizukiCore;
+namespace nayuki;
 
 use pocketmine\entity\animation\ArmSwingAnimation;
 use pocketmine\event\inventory\CraftItemEvent;
@@ -13,6 +13,8 @@ use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\event\server\NetworkInterfaceRegisterEvent;
 use pocketmine\event\world\WorldLoadEvent;
+use pocketmine\network\mcpe\NetworkBroadcastUtils;
+use pocketmine\network\mcpe\protocol\AnimatePacket;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
 use pocketmine\network\mcpe\protocol\types\inventory\UseItemOnEntityTransactionData;
@@ -24,9 +26,9 @@ use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use pocketmine\world\World;
 
-final class Listener implements PMListener{
+final readonly class Listener implements PMListener{
 
-	public function __construct(private Main $plugin){ }
+	public function __construct(private Main $main){ }
 
 
 	/**
@@ -38,7 +40,7 @@ final class Listener implements PMListener{
 
 		Server::getInstance()->broadcastMessage(TextFormat::WHITE . "[" . TextFormat::GREEN . "+" . TextFormat::WHITE . "] " . TextFormat::AQUA . $player->getName());
 
-		Utils::loadPlayerData($player);
+		$this->main->getPlayerHandler()->loadPlayerData($player);
 	}
 
 	/**
@@ -50,9 +52,8 @@ final class Listener implements PMListener{
 
 		Server::getInstance()->broadcastMessage(TextFormat::WHITE . "[" . TextFormat::RED . "-" . TextFormat::WHITE . "] " . TextFormat::AQUA . $player->getName());
 
-		$this->plugin->getClickHandler()->removePlayerClickData($player);
-
-		Utils::savePlayerData($player);
+		$this->main->getClickHandler()->removePlayerClickData($player);
+		$this->main->getPlayerHandler()->savePlayerData($player);
 	}
 
 	/**
@@ -93,15 +94,18 @@ final class Listener implements PMListener{
 	}
 
 	/**
-	 * @priority LOWEST
+	 * @priority HIGHEST
 	 */
 	public function onDataPacketReceiveEvent(DataPacketReceiveEvent $event) : void{
 		$player = $event->getOrigin()->getPlayer();
 		$packet = $event->getPacket();
 		if($player instanceof Player){
-			if(($packet instanceof InventoryTransactionPacket && $packet->trData instanceof UseItemOnEntityTransactionData) || ($packet instanceof LevelSoundEventPacket && $packet->sound === LevelSoundEvent::ATTACK_NODAMAGE)){
-				$this->plugin->getClickHandler()->addClick($player);
+			if(($packet instanceof InventoryTransactionPacket && $packet->trData instanceof UseItemOnEntityTransactionData) || ($packet instanceof LevelSoundEventPacket && ($packet->sound === LevelSoundEvent::ATTACK_NODAMAGE || $packet->sound === LevelSoundEvent::ATTACK_STRONG))){
+				$this->main->getClickHandler()->addClick($player);
 				$player->broadcastAnimation(new ArmSwingAnimation($player));
+			}elseif($packet instanceof AnimatePacket){
+				NetworkBroadcastUtils::broadcastPackets($player->getViewers(), [$packet]);
+				$event->cancel();
 			}
 		}
 	}

@@ -2,16 +2,13 @@
 
 declare(strict_types=1);
 
-namespace MizukiCore\player\kit;
+namespace nayuki\player\kit;
 
 use pocketmine\player\Player;
 
 abstract class BaseKit{
-	private string $kitName;
 
-	public function __construct(string $kitName){
-		$this->kitName = $kitName;
-	}
+	public function __construct(private readonly string $kitName){ }
 
 	public function getName() : string{
 		return $this->kitName;

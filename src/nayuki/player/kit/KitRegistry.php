@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MizukiCore\player\kit;
+namespace nayuki\player\kit;
 
 use pocketmine\utils\RegistryTrait;
 

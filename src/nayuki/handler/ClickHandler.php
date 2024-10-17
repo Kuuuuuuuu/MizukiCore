@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MizukiCore\handler;
+namespace nayuki\handler;
 
-use MizukiCore\Main;
+use nayuki\Main;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use WeakMap;
@@ -12,12 +12,12 @@ use WeakMap;
 final class ClickHandler{
 	private WeakMap $clickData;
 
-	public function __construct(){
+	public function __construct(private readonly Main $main){
 		$this->clickData = new WeakMap();
 	}
 
 	public function addClick(Player $player) : void{
-		$session = Main::getInstance()->getSessionManager()->getSession($player);
+		$session = $this->main->getSessionManager()->getSession($player);
 		$playerCps = $this->getClicks($player);
 
 		if($session->isCpsCounterEnabled()){

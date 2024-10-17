@@ -1,5 +1,7 @@
 name: MizukiCore
-main: MizukiCore\Main
-src-namespace-prefix: MizukiCore
+main: nayuki\Main
 version: 1.0.0
 api: 5.0.0
+permissions:
+  hologram.command:
+    default: op

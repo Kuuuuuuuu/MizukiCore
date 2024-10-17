@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace MizukiCore\tasks\async;
+namespace nayuki\tasks\async;
 
 use Exception;
-use MizukiCore\Main;
+use nayuki\Main;
 use pocketmine\player\Player;
 use pocketmine\scheduler\AsyncTask;
 use function yaml_emit_file;
@@ -45,8 +45,7 @@ final class AsyncLoadPlayerData extends AsyncTask{
 			}
 
 			yaml_emit_file($this->path, $playerData);
-		}catch(Exception $e){
-			Main::getInstance()->getLogger()->logException($e);
+		}catch(Exception){
 		}
 
 		return $playerData;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MizukiCore\player\session;
+namespace nayuki\player\session;
 
-use MizukiCore\player\kit\BaseKit;
+use nayuki\player\kit\BaseKit;
 use pocketmine\player\Player;
 
 final class Session{
@@ -17,7 +17,7 @@ final class Session{
 	private bool $cps = true;
 	private bool $initialized = false;
 
-	public function __construct(private Player $player){
+	public function __construct(private readonly Player $player){
 	}
 
 	public function getPlayer() : Player{

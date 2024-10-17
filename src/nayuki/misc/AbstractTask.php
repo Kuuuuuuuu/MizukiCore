@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MizukiCore\misc;
+namespace nayuki\misc;
 
-use MizukiCore\Main;
+use nayuki\Main;
 use pocketmine\scheduler\Task;
 
 abstract class AbstractTask extends Task{
