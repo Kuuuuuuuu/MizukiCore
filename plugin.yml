@@ -1,0 +1,5 @@
+name: MizukiCore
+main: MizukiCore\Main
+src-namespace-prefix: MizukiCore
+version: 1.0.0
+api: 5.0.0
