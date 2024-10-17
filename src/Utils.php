@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace MizukiCore;
 
+use MizukiCore\tasks\async\AsyncLoadPlayerData;
+use MizukiCore\tasks\async\AsyncSavePlayerData;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\DoubleTag;
@@ -36,5 +38,24 @@ final class Utils{
 				new FloatTag($yaw),
 				new FloatTag($pitch),
 			]));
+	}
+
+	public static function loadPlayerData(Player $player) : void{
+		$xuid = $player->getXuid();
+		$filePath = Main::getInstance()->getDataFolder() . 'player/' . "$xuid.yml";
+		$task = new AsyncLoadPlayerData($player, $filePath);
+
+		Main::getInstance()->getServer()->getAsyncPool()->submitTask($task);
+	}
+
+	public static function savePlayerData(Player $player) : void{
+		$session = Main::getInstance()->getSessionManager()->getSession($player);
+		$xuid = $player->getXuid();
+		$filePath = Main::getInstance()->getDataFolder() . 'player/' . "$xuid.yml";
+
+		if($session->isInitialized()){
+			$task = new AsyncSavePlayerData($player, $filePath);
+			Main::getInstance()->getServer()->getAsyncPool()->submitTask($task);
+		}
 	}
 }
