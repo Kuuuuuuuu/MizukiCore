@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace nayuki;
 
 use nayuki\commands\HologramCommand;
+use nayuki\commands\NPCCommand;
 use nayuki\entities\Hologram;
+use nayuki\entities\NPC;
 use nayuki\handler\ClickHandler;
 use nayuki\player\PlayerHandler;
 use nayuki\player\session\SessionManager;
 use nayuki\tasks\MainTask;
 use pocketmine\entity\EntityDataHelper;
 use pocketmine\entity\EntityFactory;
+use pocketmine\entity\Human;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
@@ -56,18 +59,42 @@ final class Main extends PluginBase{
 		@mkdir(self::getPlayerDataPath());
 
 		$this->getServer()->getPluginManager()->registerEvents(new Listener($this), $this);
-
 		$this->getLogger()->info(TextFormat::DARK_GREEN . "enabled!");
-		$this->getServer()->getCommandMap()->register("hologram", new HologramCommand());
 
 		new MainTask(1);
 
-		EntityFactory::getInstance()->register(Hologram::class, function(World $world, CompoundTag $nbt) : Hologram{
-			return new Hologram(EntityDataHelper::parseLocation($nbt, $world), $nbt);
-		}, ['Hologram']);
+		$this->registerEntities();
+		$this->registerCommands();
 	}
 
 	public function onDisable() : void{
 		$this->getLogger()->info(TextFormat::DARK_RED . "disabled!");
+
+		foreach($this->getServer()->getOnlinePlayers() as $player){
+			$player->kick(TextFormat::RED . "Server is restarting...");
+		}
+
+		foreach($this->getServer()->getWorldManager()->getWorlds() as $world){
+			foreach($world->getEntities() as $entity){
+				if($entity instanceof Hologram || $entity instanceof NPC){
+					return;
+				}
+				$entity->close();
+			}
+		}
+	}
+
+	private function registerCommands() : void{
+		$this->getServer()->getCommandMap()->register("hologram", new HologramCommand());
+		$this->getServer()->getCommandMap()->register("npc", new NPCCommand());
+	}
+
+	private function registerEntities() : void{
+		EntityFactory::getInstance()->register(Hologram::class, function(World $world, CompoundTag $nbt) : Hologram{
+			return new Hologram(EntityDataHelper::parseLocation($nbt, $world), $nbt);
+		}, ['Hologram']);
+		EntityFactory::getInstance()->register(NPC::class, function(World $world, CompoundTag $nbt) : NPC{
+			return new NPC(EntityDataHelper::parseLocation($nbt, $world), Human::parseSkinNBT($nbt), $nbt);
+		}, ['NPC']);
 	}
 }
