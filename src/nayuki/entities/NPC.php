@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace nayuki\entities;
 
+use nayuki\Main;
 use nayuki\player\kit\BaseKit;
 use nayuki\player\kit\KitRegistry;
 use pocketmine\entity\Human;
@@ -57,9 +58,11 @@ final class NPC extends Human{
 	}
 
 	private function interact(Player $player) : void{
+		$session = Main::getInstance()->getSessionManager()->getSession($player);
 		$this->kit->setEffect($player);
 		$player->getInventory()->setContents($this->kit->getInventoryItems());
 		$player->getArmorInventory()->setContents($this->kit->getArmorItems());
+		$session->setCurrentKit($this->kit);
 	}
 
 	public function destroy() : void{
