@@ -40,6 +40,10 @@ final class Main extends PluginBase{
 		return self::$instance;
 	}
 
+	public static function getPlayerDataPath() : string{
+		return self::getInstance()->getDataFolder() . 'player/';
+	}
+
 	public function onLoad() : void{
 		self::$instance = $this;
 		$this->sessionManager = new SessionManager();
@@ -49,7 +53,7 @@ final class Main extends PluginBase{
 
 	public function onEnable() : void{
 		@mkdir($this->getDataFolder());
-		@mkdir($this->getDataFolder() . 'player/');
+		@mkdir(self::getPlayerDataPath());
 
 		$this->getServer()->getPluginManager()->registerEvents(new Listener($this), $this);
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace nayuki\player\kit;
 
+use nayuki\player\kit\types\Bomber;
 use pocketmine\utils\RegistryTrait;
 
 final class KitRegistry{
@@ -28,7 +29,7 @@ final class KitRegistry{
 	}
 
 	protected static function setup() : void{
-
+		self::register(new Bomber('Bomber'));
 	}
 
 	/**

@@ -7,6 +7,7 @@ namespace nayuki;
 use pocketmine\entity\animation\ArmSwingAnimation;
 use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\event\Listener as PMListener;
+use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
@@ -108,5 +109,12 @@ final readonly class Listener implements PMListener{
 				$event->cancel();
 			}
 		}
+	}
+
+	/**
+	 * @priority HIGHEST
+	 */
+	public function onPlayerDropItemEvent(PlayerDropItemEvent $event) : void{
+		$event->cancel();
 	}
 }

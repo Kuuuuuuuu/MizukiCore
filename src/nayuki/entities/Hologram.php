@@ -15,17 +15,11 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataProperties;
 use function is_array;
 
 final class Hologram extends Entity{
-	/** @var int */
 	private int $countdown = 1;
-	/** @var string|null */
 	private ?string $type = null;
-	/** @var float */
 	private float $height = 0.1;
-	/** @var float */
 	private float $width = 0.1;
-	/** @var int */
 	private int $tick = 0;
-	/** @var string */
 	private string $subtitle = '';
 
 	public function __construct(Location $location, CompoundTag $nbt){
@@ -39,27 +33,14 @@ final class Hologram extends Entity{
 		$this->getNetworkProperties()->setFloat(EntityMetadataProperties::BOUNDING_BOX_HEIGHT, 0);
 	}
 
-	/**
-	 * @param CompoundTag $nbt
-	 *
-	 * @return void
-	 */
 	private function loadFromNBT(CompoundTag $nbt) : void{
 		$this->type = $nbt->getString('type');
 	}
 
-	/**
-	 * @return string
-	 */
 	public static function getNetworkTypeId() : string{
 		return EntityIds::PLAYER;
 	}
 
-	/**
-	 * @param int $currentTick
-	 *
-	 * @return bool
-	 */
 	public function onUpdate(int $currentTick) : bool{
 		++$this->tick;
 		if($this->tick % 20 === 0){
@@ -73,9 +54,6 @@ final class Hologram extends Entity{
 		return parent::onUpdate($currentTick);
 	}
 
-	/**
-	 * @return string
-	 */
 	private function getSubtitleType() : string{
 		if($this->type === null){
 			return '';
@@ -125,9 +103,6 @@ final class Hologram extends Entity{
 		$source->cancel();
 	}
 
-	/**
-	 * @return CompoundTag
-	 */
 	public function saveNBT() : CompoundTag{
 		$nbt = parent::saveNBT();
 		if($this->type === null){
@@ -137,23 +112,14 @@ final class Hologram extends Entity{
 		return $nbt;
 	}
 
-	/**
-	 * @return EntitySizeInfo
-	 */
 	protected function getInitialSizeInfo() : EntitySizeInfo{
 		return new EntitySizeInfo($this->height, $this->width);
 	}
 
-	/**
-	 * @return float
-	 */
 	protected function getInitialDragMultiplier() : float{
 		return 0.02;
 	}
 
-	/**
-	 * @return float
-	 */
 	protected function getInitialGravity() : float{
 		return 0.08;
 	}

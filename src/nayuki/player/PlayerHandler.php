@@ -12,7 +12,7 @@ final readonly class PlayerHandler{
 
 	public function loadPlayerData(Player $player) : void{
 		$xuid = $player->getXuid();
-		$filePath = $this->main->getDataFolder() . 'player/' . "$xuid.yml";
+		$filePath = $this->main::getPlayerDataPath() . "$xuid.yml";
 		$task = new AsyncLoadPlayerData($player, $filePath);
 
 		$this->main->getServer()->getAsyncPool()->submitTask($task);
@@ -21,7 +21,7 @@ final readonly class PlayerHandler{
 	public function savePlayerData(Player $player) : void{
 		$session = $this->main->getSessionManager()->getSession($player);
 		$xuid = $player->getXuid();
-		$filePath = $this->main->getDataFolder() . 'player/' . "$xuid.yml";
+		$filePath = $this->main::getPlayerDataPath() . "$xuid.yml";
 
 		if($session->isInitialized()){
 			$task = new AsyncSavePlayerData($player, $session, $filePath);
