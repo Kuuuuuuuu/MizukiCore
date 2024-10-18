@@ -14,8 +14,8 @@ final class ScoreboardUtils{
 	private const OBJECTIVE_NAME = 'cunny';
 	private const DISPLAY_SLOT = 'sidebar';
 
-	public function new(Player $player, string $displayName) : void{
-		$this->remove($player);
+	public static function new(Player $player, string $displayName) : void{
+		self::remove($player);
 
 		$pk = SetDisplayObjectivePacket::create(
 			self::DISPLAY_SLOT,
@@ -28,12 +28,12 @@ final class ScoreboardUtils{
 		$player->getNetworkSession()->sendDataPacket($pk);
 	}
 
-	public function remove(Player $player) : void{
+	public static function remove(Player $player) : void{
 		$pk = RemoveObjectivePacket::create(self::OBJECTIVE_NAME);
 		$player->getNetworkSession()->sendDataPacket($pk);
 	}
 
-	public function setLine(Player $player, int $score, string $message) : void{
+	public static function setLine(Player $player, int $score, string $message) : void{
 		$entry = new ScorePacketEntry();
 		$entry->objectiveName = self::OBJECTIVE_NAME;
 		$entry->type = ScorePacketEntry::TYPE_FAKE_PLAYER;
