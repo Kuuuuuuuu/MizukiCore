@@ -8,12 +8,16 @@ use pocketmine\entity\effect\EffectInstance;
 use pocketmine\entity\effect\VanillaEffects;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
+use pocketmine\item\Item;
 use pocketmine\item\VanillaItems;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
 final class Bomber extends BaseKit{
 
+	/**
+	 * @return Item[]
+	 */
 	public function getArmorItems() : array{
 		return [
 			VanillaItems::CHAINMAIL_HELMET()->setUnbreakable(false),
@@ -23,6 +27,9 @@ final class Bomber extends BaseKit{
 		];
 	}
 
+	/**
+	 * @return Item[]
+	 */
 	public function getInventoryItems() : array{
 		return [
 			VanillaItems::IRON_SWORD()->setUnbreakable(false),

@@ -17,8 +17,7 @@ final class Session{
 	private bool $cps = true;
 	private bool $initialized = false;
 
-	public function __construct(private readonly Player $player){
-	}
+	public function __construct(private readonly Player $player){ }
 
 	public function getPlayer() : Player{
 		return $this->player;

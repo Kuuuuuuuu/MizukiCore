@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace nayuki\player\kit;
 
+use pocketmine\item\Item;
 use pocketmine\player\Player;
 
 abstract class BaseKit{
@@ -15,12 +16,12 @@ abstract class BaseKit{
 	}
 
 	/**
-	 * @return array The list of armor items.
+	 * @return Item[] The list of armor items.
 	 */
 	abstract public function getArmorItems() : array;
 
 	/**
-	 * @return array The list of inventory items.
+	 * @return Item[] The list of inventory items.
 	 */
 	abstract public function getInventoryItems() : array;
 

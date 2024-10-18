@@ -1,20 +1,19 @@
 <?php
 
-namespace MizukiCore\nayuki\player\kit\types;
+namespace nayuki\player\kit\types;
 
 use nayuki\player\kit\BaseKit;
-use pocketmine\block\VanillaBlocks;
-use pocketmine\entity\effect\EffectInstance;
-use pocketmine\entity\effect\VanillaEffects;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
-use pocketmine\item\PotionType;
+use pocketmine\item\Item;
 use pocketmine\item\VanillaItems;
 use pocketmine\player\Player;
-use pocketmine\utils\TextFormat;
 
 final class Fisherman extends BaseKit{
 
+	/**
+	 * @return Item[]
+	 */
 	public function getArmorItems() : array{
 		return [
 			VanillaItems::IRON_HELMET()->setUnbreakable(false),
@@ -24,6 +23,9 @@ final class Fisherman extends BaseKit{
 		];
 	}
 
+	/**
+	 * @return Item[]
+	 */
 	public function getInventoryItems() : array{
 		return [
 			VanillaItems::DIAMOND_SWORD()->setUnbreakable(false),
