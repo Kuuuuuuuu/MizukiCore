@@ -5,3 +5,5 @@ api: 5.0.0
 permissions:
   hologram.command:
     default: op
+  npc.command:
+    default: op

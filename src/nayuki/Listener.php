@@ -52,6 +52,7 @@ final readonly class Listener implements PMListener{
 
 		Server::getInstance()->broadcastMessage(TextFormat::WHITE . "[" . TextFormat::GREEN . "+" . TextFormat::WHITE . "] " . TextFormat::AQUA . $player->getName());
 		Scoreboard::spawn($player);
+		Utils::playSound('random.levelup', $player);
 
 		$this->main->getPlayerHandler()->loadPlayerData($player);
 	}
