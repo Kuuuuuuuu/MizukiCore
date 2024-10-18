@@ -24,7 +24,7 @@ use pocketmine\world\World;
 
 final class Main extends PluginBase{
 	public const PREFIX = TextFormat::DARK_GRAY . "[" . TextFormat::DARK_AQUA . "MizukiCore" . TextFormat::DARK_GRAY . "] " . TextFormat::RESET;
-	public const SPAWN_COORD = [
+	public const SPAWN_COORDS = [
 		'x' => 0,
 		'y' => 78,
 		'z' => 0,
@@ -110,7 +110,7 @@ final class Main extends PluginBase{
 		foreach($worldManager->getWorlds() as $world){
 			$world->setTime(0);
 			$world->stopTime();
-			$world->setSpawnLocation(new Vector3(self::SPAWN_COORD['x'], self::SPAWN_COORD['y'], self::SPAWN_COORD['z']));
+			$world->setSpawnLocation(new Vector3(self::SPAWN_COORDS['x'], self::SPAWN_COORDS['y'], self::SPAWN_COORDS['z']));
 		}
 	}
 
