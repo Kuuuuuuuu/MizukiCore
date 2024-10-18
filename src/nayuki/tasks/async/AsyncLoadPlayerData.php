@@ -34,13 +34,17 @@ final class AsyncLoadPlayerData extends AsyncTask{
 		$this->setResult(['data' => $playerData, 'player' => $this->playerName]);
 	}
 
+	/**
+	 * @return array<string, string|int|bool>
+	 */
 	private function loadFromYaml() : array{
 		$playerData = self::DEFAULT_DATA;
 		$playerData['name'] = $this->playerName;
 
 		try{
 			if(file_exists($this->path)){
-				$parsed = yaml_parse_file($this->path) ?: [];
+				$parsed = yaml_parse_file($this->path) ?? [];
+				assert(is_array($parsed), 'Expected array, got ' . gettype($parsed));
 				$playerData = array_merge($playerData, $parsed);
 			}
 
@@ -57,18 +61,22 @@ final class AsyncLoadPlayerData extends AsyncTask{
 			return;
 		}
 
+		/** @var array<string, string|int|bool>|null $result */
 		$result = $this->getResult();
 		if($result === null){
 			return;
 		}
 
-		$player = $core->getServer()->getPlayerExact($result['player']);
+		$player = $core->getServer()->getPlayerExact((string) $result['player']);
 		if(!$player instanceof Player || !$player->isOnline()){
 			return;
 		}
 
 		$session = $core->getSessionManager()->getSession($player);
+
+		// @phpstan-ignore-next-line
 		$session->loadData($result['data']);
+
 		$player->sendMessage(Main::PREFIX . 'Your data has been loaded.');
 	}
 }

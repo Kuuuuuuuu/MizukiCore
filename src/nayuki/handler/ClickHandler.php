@@ -10,6 +10,8 @@ use pocketmine\utils\TextFormat;
 use WeakMap;
 
 final class ClickHandler{
+
+	/** @var WeakMap<Player, float[]> */
 	private WeakMap $clickData;
 
 	public function __construct(private readonly Main $main){
@@ -32,7 +34,7 @@ final class ClickHandler{
 
 	public function getClicks(Player $player) : int{
 		$clickData = $this->clickData[$player] ?? [];
-		if(empty($clickData)){
+		if(count($clickData) === 0){
 			return 0;
 		}
 

@@ -28,8 +28,10 @@ final class AsyncSavePlayerData extends AsyncTask{
 	}
 
 	public function onRun() : void{
-		$playerData = unserialize($this->serializedPlayerData);
-		$parsed = yaml_parse_file($this->path) ?: [];
+		$playerData = (array) unserialize($this->serializedPlayerData);
+		$parsed = yaml_parse_file($this->path) ?? [];
+
+		assert(is_array($parsed), 'Expected array, got ' . gettype($parsed));
 
 		yaml_emit_file($this->path, array_merge($parsed, $playerData));
 	}

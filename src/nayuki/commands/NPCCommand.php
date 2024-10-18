@@ -36,7 +36,7 @@ final class NPCCommand extends Command{
 		if(isset($args[0])){
 			switch(strtolower($args[0])){
 				case 'spawn':
-					if(isset($args[1]) && is_string($args[1])){
+					if(isset($args[1])){
 						$kit = KitRegistry::fromString($args[1]);
 						if($kit === false){
 							$sender->sendMessage(Main::PREFIX . TextFormat::RED . 'Kit not found!');

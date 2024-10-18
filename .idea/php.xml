@@ -40,7 +40,6 @@
       <path value="$PROJECT_DIR$/phpstan/vendor/pocketmine/math" />
       <path value="$PROJECT_DIR$/phpstan/vendor/pocketmine/bedrock-protocol" />
       <path value="$PROJECT_DIR$/phpstan/vendor/pocketmine/raklib" />
-      <path value="$PROJECT_DIR$/phpstan/vendor/sof3/await-generator" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">

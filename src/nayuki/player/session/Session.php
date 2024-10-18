@@ -23,6 +23,9 @@ final class Session{
 		return $this->player;
 	}
 
+	/**
+	 * @param array<string, string|int|bool> $data
+	 */
 	public function loadData(array $data) : void{
 		$this->kills = (int) ($data['kills'] ?? 0);
 		$this->deaths = (int) ($data['deaths'] ?? 0);

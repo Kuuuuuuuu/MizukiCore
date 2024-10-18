@@ -28,13 +28,6 @@ final class KitRegistry{
 		return $kit;
 	}
 
-	/**
-	 * @return array<string, BaseKit>
-	 */
-	public static function getKits() : array{
-		return self::_registryGetAll();
-	}
-
 	protected static function setup() : void{
 		self::register(new Assassin('Assassin'));
 		self::register(new Berserker('Berserker'));

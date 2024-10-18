@@ -3,14 +3,11 @@
 namespace nayuki\player\kit\types;
 
 use nayuki\player\kit\BaseKit;
+use nayuki\player\kit\items\FreezerSword;
 use pocketmine\color\Color;
-use pocketmine\entity\effect\EffectInstance;
-use pocketmine\entity\effect\VanillaEffects;
-use pocketmine\entity\Entity;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
 use pocketmine\item\Item;
-use pocketmine\item\Sword;
 use pocketmine\item\VanillaItems;
 use pocketmine\player\Player;
 
@@ -33,15 +30,7 @@ final class Freezer extends BaseKit{
 	 */
 	public function getInventoryItems() : array{
 		return [
-			(new class(VanillaItems::STONE_SWORD()) extends Sword{
-				public function onAttackEntity(Entity $victim, array &$returnedItems) : bool{
-					if($victim instanceof Player){
-						$victim->getEffects()->add(new EffectInstance(VanillaEffects::SLOWNESS(), 20 * 5, 1, false));
-					}
-
-					return parent::onAttackEntity($victim, $returnedItems);
-				}
-			})->setUnbreakable(false)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::SHARPNESS(), 1)),
+			(new FreezerSword())->setUnbreakable(false)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::SHARPNESS(), 1)),
 		];
 	}
 
