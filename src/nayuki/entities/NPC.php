@@ -31,6 +31,9 @@ final class NPC extends Human{
 		$this->kit = $kit;
 		$this->setCanSaveWithChunk(true);
 		$this->setNoClientPredictions();
+		$this->getInventory()->setContents($kit->getInventoryItems());
+		$this->getArmorInventory()->setContents($kit->getArmorItems());
+		$this->setNameTag($this->kit->getName());
 	}
 
 	public function saveNBT() : CompoundTag{
@@ -79,8 +82,5 @@ final class NPC extends Human{
 		$this->setNameTagAlwaysVisible();
 		$this->setScale(1.0);
 		$this->setNoClientPredictions();
-		$this->getInventory()->setContents($this->kit->getInventoryItems());
-		$this->getArmorInventory()->setContents($this->kit->getArmorItems());
-		$this->setNameTag($this->kit->getName());
 	}
 }
