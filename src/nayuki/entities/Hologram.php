@@ -60,7 +60,7 @@ final class Hologram extends Entity{
 		}
 
 		$isKills = ($this->type === 'kills');
-		$subtitle = $isKills ? "§	§b§lTop Kills\n" : "§b§lTop Deaths\n";
+		$subtitle = $isKills ? "§b§lTop Kills\n" : "§b§lTop Deaths\n";
 
 		$array = [];
 		foreach(Main::getInstance()->getSessionManager()->getSessions() as $session){

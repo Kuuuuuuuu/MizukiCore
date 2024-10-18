@@ -28,11 +28,14 @@ final class HologramCommand extends Command{
 			$sender->sendMessage(Main::PREFIX . TextFormat::RED . 'You can only use this command in-Game!');
 			return;
 		}
+
+		if(!$this->testPermission($sender)){
+			return;
+		}
+
 		if(isset($args[0])){
 			switch(strtolower($args[0])){
 				case 'spawn':
-				case 'new':
-				case 'add':
 					if(!isset($args[1])){
 						$sender->sendMessage(Main::PREFIX . TextFormat::RED . 'Usage: /hologram spawn <type>');
 						return;
@@ -60,7 +63,7 @@ final class HologramCommand extends Command{
 		}
 	}
 
-	public function spawn(Player $player, string $type) : int{
+	public function spawn(Player $player, string $type) : void{
 		$nbt = Utils::createBaseNBT($player->getPosition(), null, $player->getLocation()->getYaw(), $player->getLocation()->getPitch());
 		$nbt->setString('type', $type);
 		$entity = new Hologram($player->getLocation(), $nbt);
@@ -68,7 +71,5 @@ final class HologramCommand extends Command{
 		$entity->spawnToAll();
 
 		$player->sendMessage(Main::PREFIX . TextFormat::GREEN . 'Hologram' . ' created successfully! ID: ' . $entity->getId());
-
-		return $entity->getId();
 	}
 }
