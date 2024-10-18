@@ -6,6 +6,7 @@ namespace nayuki;
 
 use nayuki\commands\HologramCommand;
 use nayuki\commands\NPCCommand;
+use nayuki\entities\BomberTNT;
 use nayuki\entities\Hologram;
 use nayuki\entities\NPC;
 use nayuki\handler\ClickHandler;
@@ -86,15 +87,20 @@ final class Main extends PluginBase{
 
 	private function registerCommands() : void{
 		$this->getServer()->getCommandMap()->register("hologram", new HologramCommand());
-		$this->getServer()->getCommandMap()->register("npc", new NPCCommand());
+		$this->getServer()->getCommandMap()->register("npc", new NPCCommand($this));
 	}
 
 	private function registerEntities() : void{
 		EntityFactory::getInstance()->register(Hologram::class, function(World $world, CompoundTag $nbt) : Hologram{
 			return new Hologram(EntityDataHelper::parseLocation($nbt, $world), $nbt);
 		}, ['Hologram']);
+
 		EntityFactory::getInstance()->register(NPC::class, function(World $world, CompoundTag $nbt) : NPC{
 			return new NPC(EntityDataHelper::parseLocation($nbt, $world), Human::parseSkinNBT($nbt), $nbt);
 		}, ['NPC']);
+
+		EntityFactory::getInstance()->register(BomberTNT::class, function(World $world, CompoundTag $nbt) : BomberTNT{
+			return new BomberTNT(EntityDataHelper::parseLocation($nbt, $world), $nbt);
+		}, ['BomberTNT']);
 	}
 }
