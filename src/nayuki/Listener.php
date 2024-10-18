@@ -4,16 +4,28 @@ declare(strict_types=1);
 
 namespace nayuki;
 
+use nayuki\entities\BomberTNT;
+use nayuki\player\scoreboard\Scoreboard;
 use pocketmine\entity\animation\ArmSwingAnimation;
+use pocketmine\entity\Location;
+use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\event\block\BlockBurnEvent;
+use pocketmine\event\block\BlockPlaceEvent;
+use pocketmine\event\block\BlockUpdateEvent;
+use pocketmine\event\block\LeavesDecayEvent;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\event\Listener as PMListener;
+use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
+use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\event\server\NetworkInterfaceRegisterEvent;
-use pocketmine\event\world\WorldLoadEvent;
+use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\NetworkBroadcastUtils;
 use pocketmine\network\mcpe\protocol\AnimatePacket;
 use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
@@ -25,7 +37,6 @@ use pocketmine\network\query\DedicatedQueryNetworkInterface;
 use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
-use pocketmine\world\World;
 
 final readonly class Listener implements PMListener{
 
@@ -40,6 +51,7 @@ final readonly class Listener implements PMListener{
 		$event->setJoinMessage("");
 
 		Server::getInstance()->broadcastMessage(TextFormat::WHITE . "[" . TextFormat::GREEN . "+" . TextFormat::WHITE . "] " . TextFormat::AQUA . $player->getName());
+		Scoreboard::spawn($player);
 
 		$this->main->getPlayerHandler()->loadPlayerData($player);
 	}
@@ -55,31 +67,6 @@ final readonly class Listener implements PMListener{
 
 		$this->main->getClickHandler()->removePlayerClickData($player);
 		$this->main->getPlayerHandler()->savePlayerData($player);
-	}
-
-	/**
-	 * @priority HIGHEST
-	 */
-	public function onPlayerExhaustEvent(PlayerExhaustEvent $event) : void{
-		$event->setAmount(0);
-	}
-
-	/**
-	 * @priority HIGHEST
-	 */
-	public function onCraftItemEvent(CraftItemEvent $event) : void{
-		if(!$event->isCancelled()){
-			$event->cancel();
-		}
-	}
-
-	/**
-	 * @priority LOWEST
-	 */
-	public function onWorldLoadEvent(WorldLoadEvent $event) : void{
-		$world = $event->getWorld();
-		$world->setTime(World::TIME_DAY);
-		$world->stopTime();
 	}
 
 	/**
@@ -114,7 +101,112 @@ final readonly class Listener implements PMListener{
 	/**
 	 * @priority HIGHEST
 	 */
+	public function onPlayerDeathEvent(PlayerDeathEvent $event) : void{
+		$player = $event->getPlayer();
+		$cause = $player->getLastDamageCause();
+		if($cause instanceof EntityDamageByEntityEvent){
+			$killer = $cause->getDamager();
+			if($killer instanceof Player){
+				Scoreboard::inArena($killer);
+				$killer->sendMessage(TextFormat::GREEN . "You killed " . TextFormat::AQUA . $player->getName());
+			}
+		}
+		Scoreboard::spawn($player);
+	}
+
+	/**
+	 * @priority HIGHEST
+	 */
+	public function onPlayerRespawnEvent(PlayerRespawnEvent $event) : void{
+		$player = $event->getPlayer();
+		$spawnCoords = $this->main::SPAWN_COORDS;
+		$player->teleport(new Vector3($spawnCoords['x'], $spawnCoords['y'], $spawnCoords['z']));
+
+		Scoreboard::spawn($player);
+	}
+
+	/**
+	 * @priority HIGHEST
+	 */
 	public function onPlayerDropItemEvent(PlayerDropItemEvent $event) : void{
+		$player = $event->getPlayer();
+
+		if(!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()){
+			$event->cancel();
+		}
+	}
+
+	/**
+	 * @priority HIGHEST
+	 */
+	public function onPlayerBreakBlockEvent(BlockBreakEvent $event) : void{
+		$player = $event->getPlayer();
+
+		if(!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()){
+			$event->cancel();
+		}
+	}
+
+	/**
+	 * @priority HIGHEST
+	 */
+	public function onPlayerPlaceBlockEvent(BlockPlaceEvent $event) : void{
+		$player = $event->getPlayer();
+		$blockAgainst = $event->getBlockAgainst();
+		$itemInHand = $event->getItem();
+		$session = $this->main->getSessionManager()->getSession($player);
+		if($session->getCurrentKit()?->getName() === "Bomber" && $itemInHand->getCustomName() === TextFormat::RESET . TextFormat::RED . "Bomber TNT" . TextFormat::RESET . TextFormat::WHITE . " (กดวางที่พื้นเพื่อใช้งาน)"){
+			new BomberTNT(Location::fromObject(new Vector3($blockAgainst->getPosition()->z, $blockAgainst->getPosition()->y, $blockAgainst->getPosition()->z), $blockAgainst->getPosition()->getWorld()));
+			$player->getInventory()->setItemInHand($player->getInventory()->getItemInHand()->setCount($player->getInventory()->getItemInHand()->getCount() - 1));
+			$event->cancel();
+		}else if(!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()){
+			$event->cancel();
+		}
+	}
+
+	/**
+	 * @priority HIGHEST
+	 */
+	public function onPlayerInteractEvent(PlayerInteractEvent $event) : void{
+		$player = $event->getPlayer();
+
+		if(!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()){
+			$event->cancel();
+		}
+	}
+
+	/**
+	 * @priority HIGHEST
+	 */
+	public function onCraft(CraftItemEvent $event) : void{
+		$event->cancel();
+	}
+
+	/**
+	 * @priority HIGHEST
+	 */
+	public function onLeaveDecay(LeavesDecayEvent $event) : void{
+		$event->cancel();
+	}
+
+	/**
+	 * @priority HIGHEST
+	 */
+	public function onBlockBurn(BlockBurnEvent $event) : void{
+		$event->cancel();
+	}
+
+	/**
+	 * @priority HIGHEST
+	 */
+	public function onBlockUpdate(BlockUpdateEvent $event) : void{
+		$event->cancel();
+	}
+
+	/**
+	 * @priority HIGHEST
+	 */
+	public function onPlayerExhaust(PlayerExhaustEvent $event) : void{
 		$event->cancel();
 	}
 }
