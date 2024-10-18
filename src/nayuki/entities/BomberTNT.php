@@ -8,6 +8,8 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Vector3;
+use pocketmine\world\particle\HugeExplodeSeedParticle;
+use pocketmine\world\sound\ExplodeSound;
 
 final class BomberTNT extends PrimedTNT{
 	public function explode() : void{
@@ -19,6 +21,9 @@ final class BomberTNT extends PrimedTNT{
 		foreach($nearbyEntities as $entity){
 			$this->processEntityInExplosion($entity, $location, $explosionSize);
 		}
+
+		$this->getWorld()->addParticle($location, new HugeExplodeSeedParticle());
+		$this->getWorld()->addSound($location, new ExplodeSound());
 	}
 
 	private function calculateExplosionBoundingBox(Vector3 $location, float $explosionSize) : AxisAlignedBB{
