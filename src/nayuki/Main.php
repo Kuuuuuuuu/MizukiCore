@@ -16,6 +16,7 @@ use nayuki\tasks\MainTask;
 use pocketmine\entity\EntityDataHelper;
 use pocketmine\entity\EntityFactory;
 use pocketmine\entity\Human;
+use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat;
@@ -23,6 +24,13 @@ use pocketmine\world\World;
 
 final class Main extends PluginBase{
 	public const PREFIX = TextFormat::DARK_GRAY . "[" . TextFormat::DARK_AQUA . "MizukiCore" . TextFormat::DARK_GRAY . "] " . TextFormat::RESET;
+	public const SPAWN_COORD = [
+		'x' => 0,
+		'y' => 78,
+		'z' => 0,
+		'world' => 'world'
+	];
+
 	private static Main $instance;
 	private SessionManager $sessionManager;
 	private ClickHandler $clickHandler;
@@ -64,6 +72,7 @@ final class Main extends PluginBase{
 
 		new MainTask(1);
 
+		$this->loadWorlds();
 		$this->registerEntities();
 		$this->registerCommands();
 	}
@@ -82,6 +91,26 @@ final class Main extends PluginBase{
 				}
 				$entity->close();
 			}
+		}
+	}
+
+	private function loadWorlds() : void{
+		$worldManager = $this->getServer()->getWorldManager();
+		$worldPaths = glob($this->getServer()->getDataPath() . 'worlds/*', GLOB_ONLYDIR);
+
+		if($worldPaths === false){
+			return;
+		}
+
+		foreach($worldPaths as $worldPath){
+			$worldName = basename($worldPath);
+			$worldManager->loadWorld($worldName, true);
+		}
+
+		foreach($worldManager->getWorlds() as $world){
+			$world->setTime(0);
+			$world->stopTime();
+			$world->setSpawnLocation(new Vector3(self::SPAWN_COORD['x'], self::SPAWN_COORD['y'], self::SPAWN_COORD['z']));
 		}
 	}
 
