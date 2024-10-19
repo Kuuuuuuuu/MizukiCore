@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace nayuki\player\kit\items;
 
 use pocketmine\entity\effect\EffectInstance;

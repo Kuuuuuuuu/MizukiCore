@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace nayuki;
 
-use nayuki\entities\BomberTNT;
 use nayuki\player\scoreboard\Scoreboard;
 use pocketmine\entity\animation\ArmSwingAnimation;
-use pocketmine\entity\Location;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockBurnEvent;
 use pocketmine\event\block\BlockPlaceEvent;
-use pocketmine\event\block\BlockUpdateEvent;
 use pocketmine\event\block\LeavesDecayEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\inventory\CraftItemEvent;
@@ -19,7 +16,7 @@ use pocketmine\event\Listener as PMListener;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
-use pocketmine\event\player\PlayerInteractEvent;
+use pocketmine\event\player\PlayerItemUseEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
@@ -156,11 +153,11 @@ final readonly class Listener implements PMListener{
 		$blockAgainst = $event->getBlockAgainst();
 		$itemInHand = $event->getItem();
 		$session = $this->main->getSessionManager()->getSession($player);
-		if($session->getCurrentKit()?->getName() === "Bomber" && $itemInHand->getCustomName() === TextFormat::RESET . TextFormat::RED . "Bomber TNT" . TextFormat::RESET . TextFormat::WHITE . " (กดวางที่พื้นเพื่อใช้งาน)"){
-			new BomberTNT(Location::fromObject(new Vector3($blockAgainst->getPosition()->z, $blockAgainst->getPosition()->y, $blockAgainst->getPosition()->z), $blockAgainst->getPosition()->getWorld()));
-			$player->getInventory()->setItemInHand($player->getInventory()->getItemInHand()->setCount($player->getInventory()->getItemInHand()->getCount() - 1));
-			$event->cancel();
-		}else if(!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()){
+
+		$format = Utils::vector3ToString($blockAgainst->getPosition());
+		$session->getCurrentKit()?->handleBlockSkill($player, ['blockAgainst' => "$format", 'itemInHand' => $itemInHand->getCustomName()]);
+
+		if(!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()){
 			$event->cancel();
 		}
 	}
@@ -168,13 +165,24 @@ final readonly class Listener implements PMListener{
 	/**
 	 * @priority HIGHEST
 	 */
-	public function onPlayerInteractEvent(PlayerInteractEvent $event) : void{
+	public function onPlayerUseItemEvent(PlayerItemUseEvent $event) : void{
 		$player = $event->getPlayer();
+		$item = $event->getItem();
+		$session = $this->main->getSessionManager()->getSession($player);
 
-		if(!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()){
-			$event->cancel();
-		}
+		$session->getCurrentKit()?->handleItemSkill($player, ['item' => $item->getCustomName()]);
 	}
+
+//	/**
+//	 * @priority HIGHEST
+//	 */
+//	public function onPlayerInteractEvent(PlayerInteractEvent $event) : void{
+//		$player = $event->getPlayer();
+//
+//		if(!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()){
+//			$event->cancel();
+//		}
+//	}
 
 	/**
 	 * @priority HIGHEST
@@ -197,12 +205,12 @@ final readonly class Listener implements PMListener{
 		$event->cancel();
 	}
 
-	/**
-	 * @priority HIGHEST
-	 */
-	public function onBlockUpdate(BlockUpdateEvent $event) : void{
-		$event->cancel();
-	}
+//	/**
+//	 * @priority HIGHEST
+//	 */
+//	public function onBlockUpdate(BlockUpdateEvent $event) : void{
+//		$event->cancel();
+//	}
 
 	/**
 	 * @priority HIGHEST

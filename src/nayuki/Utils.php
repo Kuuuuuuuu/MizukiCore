@@ -37,4 +37,8 @@ final class Utils{
 				new FloatTag($pitch),
 			]));
 	}
+
+	public static function vector3ToString(Vector3 $vector) : string{
+		return $vector->x . ':' . $vector->y . ':' . $vector->z;
+	}
 }

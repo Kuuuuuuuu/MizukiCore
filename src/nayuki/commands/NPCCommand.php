@@ -15,7 +15,6 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use function count;
-use function is_string;
 
 final class NPCCommand extends Command{
 	public function __construct(private readonly Main $main){

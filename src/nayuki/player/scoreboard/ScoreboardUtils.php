@@ -11,15 +11,13 @@ use pocketmine\network\mcpe\protocol\types\ScorePacketEntry;
 use pocketmine\player\Player;
 
 final class ScoreboardUtils{
-	private const OBJECTIVE_NAME = 'cunny';
-	private const DISPLAY_SLOT = 'sidebar';
 
 	public static function new(Player $player, string $displayName) : void{
 		self::remove($player);
 
 		$pk = SetDisplayObjectivePacket::create(
-			self::DISPLAY_SLOT,
-			self::OBJECTIVE_NAME,
+			'sidebar',
+			'cunny',
 			$displayName,
 			'cunny',
 			0
@@ -29,13 +27,13 @@ final class ScoreboardUtils{
 	}
 
 	public static function remove(Player $player) : void{
-		$pk = RemoveObjectivePacket::create(self::OBJECTIVE_NAME);
+		$pk = RemoveObjectivePacket::create('cunny');
 		$player->getNetworkSession()->sendDataPacket($pk);
 	}
 
 	public static function setLine(Player $player, int $score, string $message) : void{
 		$entry = new ScorePacketEntry();
-		$entry->objectiveName = self::OBJECTIVE_NAME;
+		$entry->objectiveName = 'cunny';
 		$entry->type = ScorePacketEntry::TYPE_FAKE_PLAYER;
 		$entry->customName = $message;
 		$entry->score = $score;

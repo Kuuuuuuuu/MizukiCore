@@ -14,6 +14,7 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\player\Player;
+use pocketmine\utils\TextFormat;
 use UnexpectedValueException;
 
 final class NPC extends Human{
@@ -34,7 +35,7 @@ final class NPC extends Human{
 		$this->setNoClientPredictions();
 		$this->getInventory()->setContents($kit->getInventoryItems());
 		$this->getArmorInventory()->setContents($kit->getArmorItems());
-		$this->setNameTag($this->kit->getName());
+		$this->setNameTag(TextFormat::AQUA . $kit->getName() . TextFormat::RESET . "\n" . TextFormat::GRAY . "Click to Select");
 	}
 
 	public function saveNBT() : CompoundTag{
@@ -59,9 +60,12 @@ final class NPC extends Human{
 
 	private function interact(Player $player) : void{
 		$session = Main::getInstance()->getSessionManager()->getSession($player);
+		$player->getEffects()->clear();
+
 		$this->kit->setEffect($player);
 		$player->getInventory()->setContents($this->kit->getInventoryItems());
 		$player->getArmorInventory()->setContents($this->kit->getArmorItems());
+
 		$session->setCurrentKit($this->kit);
 	}
 

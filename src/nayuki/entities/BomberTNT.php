@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace nayuki\entities;
 
 use pocketmine\entity\Entity;
@@ -12,8 +14,9 @@ use pocketmine\world\particle\HugeExplodeSeedParticle;
 use pocketmine\world\sound\ExplodeSound;
 
 final class BomberTNT extends PrimedTNT{
+
 	public function explode() : void{
-		$explosionSize = 6;
+		$explosionSize = 7;
 		$location = $this->getLocation();
 		$explosionBB = $this->calculateExplosionBoundingBox($location, $explosionSize);
 

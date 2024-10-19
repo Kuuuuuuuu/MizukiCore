@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace nayuki\player\kit\types;
 
 use nayuki\player\kit\BaseKit;
@@ -36,5 +38,13 @@ final class Freezer extends BaseKit{
 
 	public function setEffect(Player $player) : void{
 
+	}
+
+	public function handleBlockSkill(Player $player, array $args) : void{
+		// TODO: Implement handleBlockSkill() method.
+	}
+
+	public function handleItemSkill(Player $player, array $args) : void{
+		// TODO: Implement handleItemSkill() method.
 	}
 }

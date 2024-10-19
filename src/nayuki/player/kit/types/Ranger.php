@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace nayuki\player\kit\types;
 
 use nayuki\player\kit\BaseKit;
@@ -35,5 +37,13 @@ final class Ranger extends BaseKit{
 
 	public function setEffect(Player $player) : void{
 		$player->getEffects()->add(new EffectInstance(VanillaEffects::SPEED(), 999999, 1, false));
+	}
+
+	public function handleBlockSkill(Player $player, array $args) : void{
+		// TODO: Implement handleBlockSkill() method.
+	}
+
+	public function handleItemSkill(Player $player, array $args) : void{
+		// TODO: Implement handleItemSkill() method.
 	}
 }
