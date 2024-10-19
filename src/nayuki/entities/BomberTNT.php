@@ -5,16 +5,22 @@ declare(strict_types=1);
 namespace nayuki\entities;
 
 use pocketmine\entity\Entity;
+use pocketmine\entity\Location;
 use pocketmine\entity\object\PrimedTNT;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Vector3;
+use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\player\Player;
 use pocketmine\world\particle\HugeExplodeSeedParticle;
 use pocketmine\world\sound\ExplodeSound;
 
 final class BomberTNT extends PrimedTNT{
+
+	public function __construct(private readonly ?Player $igniter, Location $location, ?CompoundTag $nbt = null){
+		parent::__construct($location, $nbt);
+	}
 
 	public function explode() : void{
 		$explosionSize = 7;
@@ -23,7 +29,7 @@ final class BomberTNT extends PrimedTNT{
 
 		$nearbyEntities = $this->getWorld()->getNearbyEntities($explosionBB, $this);
 		foreach($nearbyEntities as $entity){
-			if(!($entity instanceof Player)){
+			if(!($entity instanceof Player) || $entity->getId() === $this->igniter?->getId()){
 				continue; // only apply to players
 			}
 			$this->processEntityInExplosion($entity, $location, $explosionSize);
@@ -62,8 +68,10 @@ final class BomberTNT extends PrimedTNT{
 
 			$damage = max(1, $damage); // Minimum damage
 
-			$ev = new EntityDamageByEntityEvent($this, $entity, EntityDamageEvent::CAUSE_ENTITY_EXPLOSION, $damage);
-			$entity->attack($ev);
+			if($this->igniter !== null){
+				$ev = new EntityDamageByEntityEvent($this->igniter, $entity, EntityDamageEvent::CAUSE_ENTITY_EXPLOSION, $damage);
+				$entity->attack($ev);
+			}
 
 			$entity->setMotion($entity->getMotion()->addVector($motion->multiply($impact * 0.785)));
 		}

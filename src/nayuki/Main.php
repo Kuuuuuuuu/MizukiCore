@@ -142,7 +142,7 @@ final class Main extends PluginBase{
 		}, ['NPC']);
 
 		EntityFactory::getInstance()->register(BomberTNT::class, function(World $world, CompoundTag $nbt) : BomberTNT{
-			return new BomberTNT(EntityDataHelper::parseLocation($nbt, $world), $nbt);
+			return new BomberTNT(null, EntityDataHelper::parseLocation($nbt, $world), $nbt);
 		}, ['BomberTNT']);
 
 		EntityFactory::getInstance()->register(FishingHook::class, function(World $world, CompoundTag $nbt) : FishingHook{

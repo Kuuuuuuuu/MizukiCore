@@ -55,7 +55,7 @@ final class Bomber extends BaseKit{
 
 		$blockAgainst = explode(":", (string) $args['blockAgainst']);
 
-		$bomb = new BomberTNT(Location::fromObject((new Vector3((int) $blockAgainst[0], (int) $blockAgainst[1], (int) $blockAgainst[2]))->add(0.5, 2, 0.5), $player->getWorld(), 0, 0));
+		$bomb = new BomberTNT($player, Location::fromObject((new Vector3((int) $blockAgainst[0], (int) $blockAgainst[1], (int) $blockAgainst[2]))->add(0.5, 2, 0.5), $player->getWorld(), 0, 0));
 		$bomb->spawnToAll();
 
 		$player->getInventory()->setItemInHand($player->getInventory()->getItemInHand()->setCount($player->getInventory()->getItemInHand()->getCount() - 1));

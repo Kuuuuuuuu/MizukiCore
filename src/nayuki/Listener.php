@@ -229,7 +229,7 @@ final readonly class Listener implements PMListener{
 				Utils::sendWorldMessage(TextFormat::GREEN . $damager->getName() . TextFormat::WHITE . " killed " . TextFormat::AQUA . $entity->getName());
 
 				$entity->setHealth(20);
-				$entity->teleport($this->main::SPAWN_COORDS);
+				$entity->teleport(new Vector3($this->main::SPAWN_COORDS['x'], $this->main::SPAWN_COORDS['y'], $this->main::SPAWN_COORDS['z']));
 				$entity->getInventory()->clearAll();
 				$entity->getArmorInventory()->clearAll();
 				$entity->getEffects()->clear();
