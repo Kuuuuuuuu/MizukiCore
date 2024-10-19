@@ -29,7 +29,8 @@ final class Scoreboard{
 	public static function inArena(Player $player) : void{
 		$session = Main::getInstance()->getSessionManager()->getSession($player);
 		$lines = [
-			"§fKits: §b" . ($session->getCurrentKit()?->getName() ?? "Unknown"),
+			"§fKills: §b" . $session->getKills(),
+			"§fDeaths: §b" . $session->getDeaths(),
 			"§fStreak: §b" . $session->getStreak(),
 			"§f----------------"
 		];
