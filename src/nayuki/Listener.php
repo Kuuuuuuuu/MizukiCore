@@ -188,7 +188,6 @@ final readonly class Listener implements PMListener{
 		$item = $event->getItem();
 		$session = $this->main->getSessionManager()->getSession($player);
 
-
 		if($event->getAction() === PlayerInteractEvent::RIGHT_CLICK_BLOCK){
 			if($item->getTypeId() === ItemTypeIds::FISHING_ROD){
 				$this->spawnFishingHook($player);
