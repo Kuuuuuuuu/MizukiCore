@@ -113,6 +113,13 @@ final readonly class Listener implements PMListener{
 		if($cause instanceof EntityDamageByEntityEvent){
 			$killer = $cause->getDamager();
 			if($killer instanceof Player){
+				$killerSession = $this->main->getSessionManager()->getSession($killer);
+				$killerSession->incrementKills();
+				$killerSession->addCoins(10);
+
+				$playerSession = $this->main->getSessionManager()->getSession($player);
+				$playerSession->incrementDeaths();
+
 				Scoreboard::inArena($killer);
 				$killer->sendMessage(TextFormat::GREEN . "You killed " . TextFormat::AQUA . $player->getName());
 			}
