@@ -24,7 +24,7 @@ use pocketmine\utils\TextFormat;
 use pocketmine\world\World;
 
 final class Main extends PluginBase{
-	public const PREFIX = TextFormat::DARK_GRAY . "[" . TextFormat::DARK_AQUA . "MizukiCore" . TextFormat::DARK_GRAY . "] " . TextFormat::RESET;
+	public const PREFIX = TextFormat::DARK_GRAY . "[" . TextFormat::AQUA . "MizukiCore" . TextFormat::DARK_GRAY . "] " . TextFormat::RESET;
 	public const SPAWN_COORDS = [
 		'x' => 0,
 		'y' => 78,
