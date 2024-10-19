@@ -110,7 +110,7 @@ final class FishingHook extends Projectile{
 
 	// my brain stop working after I wrote this
 	private function handleMotion(Vector3 $direction) : void{
-		$hFactor = 3.784;
+		$hFactor = 4.784;
 		$iFactor = 0.1;
 		$randomness = 0.037549;
 
