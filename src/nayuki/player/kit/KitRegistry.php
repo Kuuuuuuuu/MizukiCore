@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace nayuki\player\kit;
 
 use InvalidArgumentException;
-use MizukiCore\nayuki\player\kit\types\Pusher;
-use MizukiCore\nayuki\player\kit\types\Reaper;
-use MizukiCore\nayuki\player\kit\types\Samurai;
-use MizukiCore\nayuki\player\kit\types\Stealth;
+use nayuki\player\kit\types\Pusher;
+use nayuki\player\kit\types\Reaper;
+use nayuki\player\kit\types\Samurai;
+use nayuki\player\kit\types\Stealth;
 use nayuki\player\kit\types\Assassin;
 use nayuki\player\kit\types\Berserker;
 use nayuki\player\kit\types\Bomber;

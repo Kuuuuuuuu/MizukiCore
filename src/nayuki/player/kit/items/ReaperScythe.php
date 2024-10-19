@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MizukiCore\nayuki\player\kit\items;
+namespace nayuki\player\kit\items;
 
 use pocketmine\entity\effect\EffectInstance;
 use pocketmine\entity\effect\VanillaEffects;

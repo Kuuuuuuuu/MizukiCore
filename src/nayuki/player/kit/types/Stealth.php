@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MizukiCore\nayuki\player\kit\types;
+namespace nayuki\player\kit\types;
 
 use nayuki\entities\BomberTNT;
 use nayuki\player\kit\BaseKit;
@@ -49,7 +49,6 @@ final class Stealth extends BaseKit{
 
 		$player->getEffects()->add(new EffectInstance(VanillaEffects::INVISIBILITY(), 8, 1, false));
 		$player->getInventory()->setItemInHand($player->getInventory()->getItemInHand()->setCount($player->getInventory()->getItemInHand()->getCount() - 1));
-
 	}
 
 	public function handleItemSkill(Player $player, array $args) : void{

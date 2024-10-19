@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace MizukiCore\nayuki\player\kit\types;
+namespace nayuki\player\kit\types;
 
-use MizukiCore\nayuki\player\kit\items\ReaperScythe;
+use nayuki\player\kit\items\ReaperScythe;
 use nayuki\player\kit\BaseKit;
 use nayuki\player\kit\items\FreezerSword;
 use pocketmine\color\Color;
