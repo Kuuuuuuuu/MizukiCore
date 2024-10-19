@@ -7,6 +7,7 @@ namespace nayuki;
 use nayuki\commands\HologramCommand;
 use nayuki\commands\NPCCommand;
 use nayuki\entities\BomberTNT;
+use nayuki\entities\FishingHook;
 use nayuki\entities\Hologram;
 use nayuki\entities\NPC;
 use nayuki\handler\ClickHandler;
@@ -130,5 +131,9 @@ final class Main extends PluginBase{
 		EntityFactory::getInstance()->register(BomberTNT::class, function(World $world, CompoundTag $nbt) : BomberTNT{
 			return new BomberTNT(EntityDataHelper::parseLocation($nbt, $world), $nbt);
 		}, ['BomberTNT']);
+
+		EntityFactory::getInstance()->register(FishingHook::class, function(World $world, CompoundTag $nbt) : FishingHook{
+			return new FishingHook(EntityDataHelper::parseLocation($nbt, $world), null, $nbt);
+		}, ['FishingHook']);
 	}
 }

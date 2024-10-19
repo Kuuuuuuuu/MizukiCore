@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace nayuki\player;
 
+use nayuki\entities\FishingHook;
 use nayuki\Main;
 use nayuki\tasks\async\AsyncLoadPlayerData;
 use nayuki\tasks\async\AsyncSavePlayerData;
@@ -30,6 +31,11 @@ final readonly class PlayerHandler{
 			$task = new AsyncSavePlayerData($player, $session, $filePath);
 			$this->main->getServer()->getAsyncPool()->submitTask($task);
 		}
+	}
+
+	public function setFishing(Player $player, ?FishingHook $hook) : void{
+		$session = $this->main->getSessionManager()->getSession($player);
+		$session->setFishing($hook);
 	}
 
 	public function applyKnockBack(Player $player, Player $damager) : void{

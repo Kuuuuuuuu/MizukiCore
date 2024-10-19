@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace nayuki\player\session;
 
+use nayuki\entities\FishingHook;
 use nayuki\player\kit\BaseKit;
 use pocketmine\player\Player;
 
@@ -16,6 +17,7 @@ final class Session{
 	private bool $scoreboard = true;
 	private bool $cps = true;
 	private bool $initialized = false;
+	private ?FishingHook $isFishing = null;
 	public ?string $currentScoreboard = null;
 
 	public function __construct(private readonly Player $player){ }
@@ -88,6 +90,14 @@ final class Session{
 
 	public function setCpsCounterEnabled(bool $value) : void{
 		$this->cps = $value;
+	}
+
+	public function getFishingHook() : ?FishingHook{
+		return $this->isFishing;
+	}
+
+	public function setFishing(?FishingHook $value) : void{
+		$this->isFishing = $value;
 	}
 
 	public function incrementKills() : void{
