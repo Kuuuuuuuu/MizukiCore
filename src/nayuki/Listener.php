@@ -20,6 +20,7 @@ use pocketmine\event\player\PlayerItemUseEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
+use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\event\server\NetworkInterfaceRegisterEvent;
 use pocketmine\math\Vector3;
@@ -35,143 +36,156 @@ use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
-final readonly class Listener implements PMListener{
+final readonly class Listener implements PMListener
+{
 
-	public function __construct(private Main $main){ }
+    public function __construct(private Main $main)
+    {
+    }
 
 
-	/**
-	 * @priority HIGHEST
-	 */
-	public function onJoin(PlayerJoinEvent $event) : void{
-		$player = $event->getPlayer();
-		$event->setJoinMessage("");
+    /**
+     * @priority HIGHEST
+     */
+    public function onJoin(PlayerJoinEvent $event): void
+    {
+        $player = $event->getPlayer();
+        $event->setJoinMessage("");
 
-		Server::getInstance()->broadcastMessage(TextFormat::WHITE . "[" . TextFormat::GREEN . "+" . TextFormat::WHITE . "] " . TextFormat::AQUA . $player->getName());
-		Scoreboard::spawn($player);
-		Utils::playSound('random.levelup', $player);
+        Server::getInstance()->broadcastMessage(TextFormat::WHITE . "[" . TextFormat::GREEN . "+" . TextFormat::WHITE . "] " . TextFormat::AQUA . $player->getName());
+        Scoreboard::spawn($player);
+        Utils::playSound('random.levelup', $player);
 
-		$this->main->getPlayerHandler()->loadPlayerData($player);
-	}
+        $this->main->getPlayerHandler()->loadPlayerData($player);
+    }
 
-	/**
-	 * @priority HIGHEST
-	 */
-	public function onQuit(PlayerQuitEvent $event) : void{
-		$player = $event->getPlayer();
-		$event->setQuitMessage("");
+    /**
+     * @priority HIGHEST
+     */
+    public function onQuit(PlayerQuitEvent $event): void
+    {
+        $player = $event->getPlayer();
+        $event->setQuitMessage("");
 
-		Server::getInstance()->broadcastMessage(TextFormat::WHITE . "[" . TextFormat::RED . "-" . TextFormat::WHITE . "] " . TextFormat::AQUA . $player->getName());
+        Server::getInstance()->broadcastMessage(TextFormat::WHITE . "[" . TextFormat::RED . "-" . TextFormat::WHITE . "] " . TextFormat::AQUA . $player->getName());
 
-		$this->main->getClickHandler()->removePlayerClickData($player);
-		$this->main->getPlayerHandler()->savePlayerData($player);
-	}
+        $this->main->getClickHandler()->removePlayerClickData($player);
+        $this->main->getPlayerHandler()->savePlayerData($player);
+    }
 
-	/**
-	 * @priority LOWEST
-	 */
-	public function onNetworkInterfaceRegisterEvent(NetworkInterfaceRegisterEvent $event) : void{
-		$interface = $event->getInterface();
-		if($interface instanceof RakLibInterface){
-			$interface->setPacketLimit(PHP_INT_MAX);
-		}elseif($interface instanceof DedicatedQueryNetworkInterface){
-			$event->cancel();
-		}
-	}
+    /**
+     * @priority LOWEST
+     */
+    public function onNetworkInterfaceRegisterEvent(NetworkInterfaceRegisterEvent $event): void
+    {
+        $interface = $event->getInterface();
+        if ($interface instanceof RakLibInterface) {
+            $interface->setPacketLimit(PHP_INT_MAX);
+        } elseif ($interface instanceof DedicatedQueryNetworkInterface) {
+            $event->cancel();
+        }
+    }
 
-	/**
-	 * @priority HIGHEST
-	 */
-	public function onDataPacketReceiveEvent(DataPacketReceiveEvent $event) : void{
-		$player = $event->getOrigin()->getPlayer();
-		$packet = $event->getPacket();
-		if($player instanceof Player){
-			if(($packet instanceof InventoryTransactionPacket && $packet->trData instanceof UseItemOnEntityTransactionData) || ($packet instanceof LevelSoundEventPacket && ($packet->sound === LevelSoundEvent::ATTACK_NODAMAGE || $packet->sound === LevelSoundEvent::ATTACK_STRONG))){
-				$this->main->getClickHandler()->addClick($player);
-				$player->broadcastAnimation(new ArmSwingAnimation($player));
-			}elseif($packet instanceof AnimatePacket){
-				NetworkBroadcastUtils::broadcastPackets($player->getViewers(), [$packet]);
-				$event->cancel();
-			}
-		}
-	}
+    /**
+     * @priority HIGHEST
+     */
+    public function onDataPacketReceiveEvent(DataPacketReceiveEvent $event): void
+    {
+        $player = $event->getOrigin()->getPlayer();
+        $packet = $event->getPacket();
+        if ($player instanceof Player) {
+            if (($packet instanceof InventoryTransactionPacket && $packet->trData instanceof UseItemOnEntityTransactionData) || ($packet instanceof LevelSoundEventPacket && ($packet->sound === LevelSoundEvent::ATTACK_NODAMAGE || $packet->sound === LevelSoundEvent::ATTACK_STRONG))) {
+                $this->main->getClickHandler()->addClick($player);
+                $player->broadcastAnimation(new ArmSwingAnimation($player));
+            } elseif ($packet instanceof AnimatePacket) {
+                NetworkBroadcastUtils::broadcastPackets($player->getViewers(), [$packet]);
+                $event->cancel();
+            }
+        }
+    }
 
-	/**
-	 * @priority HIGHEST
-	 */
-	public function onPlayerDeathEvent(PlayerDeathEvent $event) : void{
-		$player = $event->getPlayer();
-		$cause = $player->getLastDamageCause();
-		if($cause instanceof EntityDamageByEntityEvent){
-			$killer = $cause->getDamager();
-			if($killer instanceof Player){
-				Scoreboard::inArena($killer);
-				$killer->sendMessage(TextFormat::GREEN . "You killed " . TextFormat::AQUA . $player->getName());
-			}
-		}
-		Scoreboard::spawn($player);
-	}
+    /**
+     * @priority HIGHEST
+     */
+    public function onPlayerDeathEvent(PlayerDeathEvent $event): void
+    {
+        $player = $event->getPlayer();
+        $cause = $player->getLastDamageCause();
+        if ($cause instanceof EntityDamageByEntityEvent) {
+            $killer = $cause->getDamager();
+            if ($killer instanceof Player) {
+                Scoreboard::inArena($killer);
+                $killer->sendMessage(TextFormat::GREEN . "You killed " . TextFormat::AQUA . $player->getName());
+            }
+        }
+        Scoreboard::spawn($player);
+    }
 
-	/**
-	 * @priority HIGHEST
-	 */
-	public function onPlayerRespawnEvent(PlayerRespawnEvent $event) : void{
-		$player = $event->getPlayer();
-		$spawnCoords = $this->main::SPAWN_COORDS;
-		$player->teleport(new Vector3($spawnCoords['x'], $spawnCoords['y'], $spawnCoords['z']));
+    /**
+     * @priority HIGHEST
+     */
+    public function onPlayerRespawnEvent(PlayerRespawnEvent $event): void
+    {
+        $player = $event->getPlayer();
+        $spawnCoords = $this->main::SPAWN_COORDS;
+        $player->teleport(new Vector3($spawnCoords['x'], $spawnCoords['y'], $spawnCoords['z']));
 
-		Scoreboard::spawn($player);
-	}
+        Scoreboard::spawn($player);
+    }
 
-	/**
-	 * @priority HIGHEST
-	 */
-	public function onPlayerDropItemEvent(PlayerDropItemEvent $event) : void{
-		$player = $event->getPlayer();
+    /**
+     * @priority HIGHEST
+     */
+    public function onPlayerDropItemEvent(PlayerDropItemEvent $event): void
+    {
+        $player = $event->getPlayer();
 
-		if(!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()){
-			$event->cancel();
-		}
-	}
+        if (!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()) {
+            $event->cancel();
+        }
+    }
 
-	/**
-	 * @priority HIGHEST
-	 */
-	public function onPlayerBreakBlockEvent(BlockBreakEvent $event) : void{
-		$player = $event->getPlayer();
+    /**
+     * @priority HIGHEST
+     */
+    public function onPlayerBreakBlockEvent(BlockBreakEvent $event): void
+    {
+        $player = $event->getPlayer();
 
-		if(!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()){
-			$event->cancel();
-		}
-	}
+        if (!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()) {
+            $event->cancel();
+        }
+    }
 
-	/**
-	 * @priority HIGHEST
-	 */
-	public function onPlayerPlaceBlockEvent(BlockPlaceEvent $event) : void{
-		$player = $event->getPlayer();
-		$blockAgainst = $event->getBlockAgainst();
-		$itemInHand = $event->getItem();
-		$session = $this->main->getSessionManager()->getSession($player);
+    /**
+     * @priority HIGHEST
+     */
+    public function onPlayerPlaceBlockEvent(BlockPlaceEvent $event): void
+    {
+        $player = $event->getPlayer();
+        $blockAgainst = $event->getBlockAgainst();
+        $itemInHand = $event->getItem();
+        $session = $this->main->getSessionManager()->getSession($player);
 
-		$format = Utils::vector3ToString($blockAgainst->getPosition());
-		$session->getCurrentKit()?->handleBlockSkill($player, ['blockAgainst' => "$format", 'itemInHand' => $itemInHand->getCustomName()]);
+        $format = Utils::vector3ToString($blockAgainst->getPosition());
+        $session->getCurrentKit()?->handleBlockSkill($player, ['blockAgainst' => "$format", 'itemInHand' => $itemInHand->getCustomName()]);
 
-		if(!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()){
-			$event->cancel();
-		}
-	}
+        if (!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()) {
+            $event->cancel();
+        }
+    }
 
-	/**
-	 * @priority HIGHEST
-	 */
-	public function onPlayerUseItemEvent(PlayerItemUseEvent $event) : void{
-		$player = $event->getPlayer();
-		$item = $event->getItem();
-		$session = $this->main->getSessionManager()->getSession($player);
+    /**
+     * @priority HIGHEST
+     */
+    public function onPlayerUseItemEvent(PlayerItemUseEvent $event): void
+    {
+        $player = $event->getPlayer();
+        $item = $event->getItem();
+        $session = $this->main->getSessionManager()->getSession($player);
 
-		$session->getCurrentKit()?->handleItemSkill($player, ['item' => $item->getCustomName()]);
-	}
+        $session->getCurrentKit()?->handleItemSkill($player, ['item' => $item->getCustomName()]);
+    }
 
 //	/**
 //	 * @priority HIGHEST
@@ -184,26 +198,29 @@ final readonly class Listener implements PMListener{
 //		}
 //	}
 
-	/**
-	 * @priority HIGHEST
-	 */
-	public function onCraft(CraftItemEvent $event) : void{
-		$event->cancel();
-	}
+    /**
+     * @priority HIGHEST
+     */
+    public function onCraft(CraftItemEvent $event): void
+    {
+        $event->cancel();
+    }
 
-	/**
-	 * @priority HIGHEST
-	 */
-	public function onLeaveDecay(LeavesDecayEvent $event) : void{
-		$event->cancel();
-	}
+    /**
+     * @priority HIGHEST
+     */
+    public function onLeaveDecay(LeavesDecayEvent $event): void
+    {
+        $event->cancel();
+    }
 
-	/**
-	 * @priority HIGHEST
-	 */
-	public function onBlockBurn(BlockBurnEvent $event) : void{
-		$event->cancel();
-	}
+    /**
+     * @priority HIGHEST
+     */
+    public function onBlockBurn(BlockBurnEvent $event): void
+    {
+        $event->cancel();
+    }
 
 //	/**
 //	 * @priority HIGHEST
@@ -212,10 +229,21 @@ final readonly class Listener implements PMListener{
 //		$event->cancel();
 //	}
 
-	/**
-	 * @priority HIGHEST
-	 */
-	public function onPlayerExhaust(PlayerExhaustEvent $event) : void{
-		$event->cancel();
-	}
+    /**
+     * @priority HIGHEST
+     */
+    public function onPlayerExhaust(PlayerExhaustEvent $event): void
+    {
+        $event->cancel();
+    }
+
+    /**
+     * @priority HIGHEST
+     */
+    public function onPlayerChat(PlayerChatEvent $event): void{
+        $player = $event->getPlayer();
+        $msg = $event->getMessage();
+        Utils::sendWorldMessage(TextFormat::GRAY . "{$player->getName()} ≫" . TextFormat::WHITE." {$msg}");
+        $event->cancel();
+    }
 }

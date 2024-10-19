@@ -11,6 +11,8 @@ use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\player\Player;
+use pocketmine\Server;
+use pocketmine\world\World;
 
 final class Utils{
 
@@ -41,4 +43,8 @@ final class Utils{
 	public static function vector3ToString(Vector3 $vector) : string{
 		return $vector->x . ':' . $vector->y . ':' . $vector->z;
 	}
+
+    public static function sendWorldMessage(String $msg): void{
+        Server::getInstance()->broadcastMessage($msg);
+    }
 }
