@@ -43,6 +43,7 @@ final class FishingHook extends Projectile{
 
 	public function __construct(Location $location, ?Entity $shootingEntity, ?CompoundTag $nbt = null){
 		parent::__construct($location, $shootingEntity, $nbt);
+		$this->setBaseDamage(1.5);
 
 		if($shootingEntity instanceof Player){
 			$this->initializePlayer($shootingEntity);
@@ -67,6 +68,7 @@ final class FishingHook extends Projectile{
 			$event = new EntityDamageByChildEntityEvent($owner, $this, $entityHit, EntityDamageEvent::CAUSE_PROJECTILE, $damage);
 			if(!$event->isCancelled()){
 				$entityHit->attack($event);
+				$entityHit->setMotion($owner->getPosition()->subtractVector($entityHit->getPosition())->normalize()->multiply(3));
 			}
 		}
 
