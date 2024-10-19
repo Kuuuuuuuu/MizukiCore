@@ -10,6 +10,7 @@ use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Vector3;
+use pocketmine\player\Player;
 use pocketmine\world\particle\HugeExplodeSeedParticle;
 use pocketmine\world\sound\ExplodeSound;
 
@@ -22,6 +23,9 @@ final class BomberTNT extends PrimedTNT{
 
 		$nearbyEntities = $this->getWorld()->getNearbyEntities($explosionBB, $this);
 		foreach($nearbyEntities as $entity){
+			if(!($entity instanceof Player)){
+				continue; // only apply to players
+			}
 			$this->processEntityInExplosion($entity, $location, $explosionSize);
 		}
 
