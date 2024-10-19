@@ -68,7 +68,7 @@ final class Hologram extends Entity{
 			$array[$player->getName()] = $isKills ? $session->getKills() : $session->getDeaths();
 		}
 
-		$files = glob(Main::getInstance()->getDataFolder() . 'players/*.yml');
+		$files = glob(Main::getPlayerDataPath() . '*.yml');
 		if($files === false){
 			return 'Error Loading Data';
 		}
