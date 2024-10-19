@@ -19,7 +19,7 @@ final class Scoreboard{
 			"§f----------------"
 		];
 
-		ScoreboardUtils::new($player, TextFormat::AQUA . "Kit" . TextFormat::WHITE . "PvP");
+		ScoreboardUtils::new($player, TextFormat::WHITE . "----------------");
 
 		foreach($lines as $index => $line){
 			ScoreboardUtils::setLine($player, $index, $line);
@@ -34,7 +34,7 @@ final class Scoreboard{
 			"§f----------------"
 		];
 
-		ScoreboardUtils::new($player, TextFormat::AQUA . "Kit" . TextFormat::WHITE . "PvP");
+		ScoreboardUtils::new($player, TextFormat::WHITE . "----------------");
 
 		foreach($lines as $index => $line){
 			ScoreboardUtils::setLine($player, $index, $line);

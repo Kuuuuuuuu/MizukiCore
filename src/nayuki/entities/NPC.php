@@ -7,6 +7,7 @@ namespace nayuki\entities;
 use nayuki\Main;
 use nayuki\player\kit\BaseKit;
 use nayuki\player\kit\KitRegistry;
+use nayuki\player\scoreboard\Scoreboard;
 use nayuki\Utils;
 use pocketmine\entity\Human;
 use pocketmine\entity\Location;
@@ -69,6 +70,7 @@ final class NPC extends Human{
 		$player->getInventory()->setContents($this->kit->getInventoryItems());
 		$player->getArmorInventory()->setContents($this->kit->getArmorItems());
 		$player->teleport(Utils::randomArenaSpawnCoords());
+		Scoreboard::inArena($player);
 
 		$session->setCurrentKit($this->kit);
 	}
