@@ -30,6 +30,19 @@ final class Main extends PluginBase{
 		'y' => 78,
 		'z' => 0,
 	];
+	public const ARENA_SPAWN_COORDS = [
+		"-46:6:-50",
+		"20:7:2",
+		"16:20:-22",
+		"21:19:85",
+		"44:37:-69",
+		"82:-16:1",
+		"-91:48:100",
+		"-95:7:-33",
+		"-117:17:-108",
+		"-23:7:30",
+		"-55:6:9"
+	];
 
 	private static Main $instance;
 	private SessionManager $sessionManager;

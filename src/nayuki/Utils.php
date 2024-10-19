@@ -12,7 +12,6 @@ use pocketmine\nbt\tag\ListTag;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\player\Player;
 use pocketmine\Server;
-use pocketmine\world\World;
 
 final class Utils{
 
@@ -44,7 +43,13 @@ final class Utils{
 		return $vector->x . ':' . $vector->y . ':' . $vector->z;
 	}
 
-    public static function sendWorldMessage(String $msg): void{
-        Server::getInstance()->broadcastMessage($msg);
-    }
+	public static function sendWorldMessage(string $msg) : void{
+		Server::getInstance()->broadcastMessage($msg);
+	}
+
+	public static function randomArenaSpawnCoords() : Vector3{
+		$coords = Main::ARENA_SPAWN_COORDS[array_rand(Main::ARENA_SPAWN_COORDS)];
+		$coords = explode(':', $coords);
+		return new Vector3((int) $coords[0], (int) $coords[1] + 1, (int) $coords[2]);
+	}
 }
