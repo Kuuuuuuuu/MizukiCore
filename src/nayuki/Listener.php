@@ -156,12 +156,6 @@ final readonly class Listener implements PMListener{
 	 */
 	public function onPlayerPlaceBlockEvent(BlockPlaceEvent $event) : void{
 		$player = $event->getPlayer();
-		$blockAgainst = $event->getBlockAgainst();
-		$itemInHand = $event->getItem();
-		$session = $this->main->getSessionManager()->getSession($player);
-
-		$format = Utils::vector3ToString($blockAgainst->getPosition());
-		$session->getCurrentKit()?->handleBlockSkill($player, ['blockAgainst' => "$format", 'itemInHand' => $itemInHand->getCustomName()]);
 
 		if(!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()){
 			$event->cancel();
@@ -192,9 +186,16 @@ final readonly class Listener implements PMListener{
 	public function onPlayerInteractEvent(PlayerInteractEvent $event) : void{
 		$player = $event->getPlayer();
 		$item = $event->getItem();
+		$session = $this->main->getSessionManager()->getSession($player);
 
-		if($event->getAction() === PlayerInteractEvent::RIGHT_CLICK_BLOCK && $item->getTypeId() === ItemTypeIds::FISHING_ROD){
-			$this->spawnFishingHook($player);
+
+		if($event->getAction() === PlayerInteractEvent::RIGHT_CLICK_BLOCK){
+			if($item->getTypeId() === ItemTypeIds::FISHING_ROD){
+				$this->spawnFishingHook($player);
+				return;
+			}
+			$format = Utils::vector3ToString($event->getBlock()->getPosition()->add(0, 1, 0));
+			$session->getCurrentKit()?->handleBlockSkill($player, ['blockAgainst' => "$format", 'itemInHand' => $item->getCustomName()]);
 		}
 
 		if(!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()){
