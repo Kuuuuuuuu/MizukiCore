@@ -16,6 +16,7 @@ final class Scoreboard{
 			"§fDeaths: §b" . $session->getDeaths(),
 			"§fKDR: §b" . $session->getKdr(),
 			"§fCoins: §b" . $session->getCoins(),
+			"§f----------------"
 		];
 
 		ScoreboardUtils::new($player, TextFormat::AQUA . "Kit" . TextFormat::WHITE . "PvP");
@@ -30,6 +31,7 @@ final class Scoreboard{
 		$lines = [
 			"§fKits: §b" . ($session->getCurrentKit()?->getName() ?? "Unknown"),
 			"§fStreak: §b" . $session->getStreak(),
+			"§f----------------"
 		];
 
 		ScoreboardUtils::new($player, TextFormat::AQUA . "Kit" . TextFormat::WHITE . "PvP");
