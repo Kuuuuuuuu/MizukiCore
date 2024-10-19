@@ -19,6 +19,7 @@ use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerDropItemEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
+use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerItemUseEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
@@ -177,15 +178,7 @@ final readonly class Listener implements PMListener{
 		$session = $this->main->getSessionManager()->getSession($player);
 
 		if($item->getTypeId() === ItemTypeIds::FISHING_ROD){
-			$hook = $session->getFishingHook();
-			if($hook === null){
-				$location = $player->getLocation();
-				$hook = new FishingHook(Location::fromObject($player->getEyePos(), $player->getWorld(), $location->getYaw(), $location->getPitch()), $player);
-
-				$hook->spawnToAll();
-			}elseif(!$hook->isFlaggedForDespawn()){
-				$hook->flagForDespawn();
-			}
+			$this->spawnFishingHook($player);
 		}
 
 		$player->broadcastAnimation(new ArmSwingAnimation($player));
@@ -193,16 +186,21 @@ final readonly class Listener implements PMListener{
 		$session->getCurrentKit()?->handleItemSkill($player, ['item' => $item->getCustomName()]);
 	}
 
-//	/**
-//	 * @priority HIGHEST
-//	 */
-//	public function onPlayerInteractEvent(PlayerInteractEvent $event) : void{
-//		$player = $event->getPlayer();
-//
-//		if(!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()){
-//			$event->cancel();
-//		}
-//	}
+	/**
+	 * @priority HIGHEST
+	 */
+	public function onPlayerInteractEvent(PlayerInteractEvent $event) : void{
+		$player = $event->getPlayer();
+		$item = $event->getItem();
+
+		if($event->getAction() === PlayerInteractEvent::RIGHT_CLICK_BLOCK && $item->getTypeId() === ItemTypeIds::FISHING_ROD){
+			$this->spawnFishingHook($player);
+		}
+
+		if(!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()){
+			$event->cancel();
+		}
+	}
 
 	/**
 	 * @priority HIGHEST
@@ -245,7 +243,20 @@ final readonly class Listener implements PMListener{
 	public function onPlayerChat(PlayerChatEvent $event) : void{
 		$player = $event->getPlayer();
 		$msg = $event->getMessage();
-		Utils::sendWorldMessage(TextFormat::GRAY . "{$player->getName()} ≫" . TextFormat::WHITE . " {$msg}");
+		Utils::sendWorldMessage(TextFormat::GRAY . "{$player->getName()} ≫" . TextFormat::WHITE . " $msg");
 		$event->cancel();
+	}
+
+	private function spawnFishingHook(Player $player) : void{
+		$session = $this->main->getSessionManager()->getSession($player);
+		$hook = $session->getFishingHook();
+		if($hook === null){
+			$location = $player->getLocation();
+			$hook = new FishingHook(Location::fromObject($player->getEyePos(), $player->getWorld(), $location->getYaw(), $location->getPitch()), $player);
+
+			$hook->spawnToAll();
+		}elseif(!$hook->isFlaggedForDespawn()){
+			$hook->flagForDespawn();
+		}
 	}
 }
