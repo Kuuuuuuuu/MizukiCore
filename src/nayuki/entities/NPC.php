@@ -14,6 +14,7 @@ use pocketmine\entity\Skin;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\player\GameMode;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use UnexpectedValueException;
@@ -62,6 +63,7 @@ final class NPC extends Human{
 	private function interact(Player $player) : void{
 		$session = Main::getInstance()->getSessionManager()->getSession($player);
 		$player->getEffects()->clear();
+		$player->setGamemode(GameMode::SURVIVAL());
 
 		$this->kit->setEffect($player);
 		$player->getInventory()->setContents($this->kit->getInventoryItems());
