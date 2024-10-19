@@ -97,7 +97,7 @@ final class FishingHook extends Projectile{
 			$player->isClosed() ||
 			$player->getInventory()->getItemInHand()->getTypeId() !== ItemTypeIds::FISHING_ROD ||
 			$player->getWorld()->getFolderName() !== $this->getWorld()->getFolderName()
-			|| $player->getPosition()->distance($this->getPosition()) > 15;
+			|| $player->getPosition()->distance($this->getPosition()) > 20;
 	}
 
 	public function flagForDespawn() : void{
