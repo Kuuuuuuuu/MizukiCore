@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace nayuki\player\kit\types;
 
-use nayuki\player\kit\items\ReaperScythe;
 use nayuki\player\kit\BaseKit;
-use nayuki\player\kit\items\FreezerSword;
+use nayuki\player\kit\items\ReaperScythe;
 use pocketmine\color\Color;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
@@ -33,12 +32,11 @@ final class Reaper extends BaseKit{
 	 */
 	public function getInventoryItems() : array{
 		return [
-			(new ReaperScythe())->setUnbreakable(false)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::SHARPNESS(), 3)),
+			(new ReaperScythe())->addEnchantment(new EnchantmentInstance(VanillaEnchantments::SHARPNESS(), 3)),
 		];
 	}
 
 	public function setEffect(Player $player) : void{
-
 	}
 
 	public function handleBlockSkill(Player $player, array $args) : void{
