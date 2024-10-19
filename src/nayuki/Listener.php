@@ -178,7 +178,7 @@ final readonly class Listener implements PMListener{
 
 		if($item->getTypeId() === ItemTypeIds::FISHING_ROD){
 			$hook = $session->getFishingHook();
-			if(!$hook){
+			if($hook === null){
 				$location = $player->getLocation();
 				$hook = new FishingHook(Location::fromObject($player->getEyePos(), $player->getWorld(), $location->getYaw(), $location->getPitch()), $player);
 
