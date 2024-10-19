@@ -108,6 +108,8 @@ final readonly class Listener implements PMListener{
 	public function onPlayerDeathEvent(PlayerDeathEvent $event) : void{
 		$player = $event->getPlayer();
 		$cause = $player->getLastDamageCause();
+		$event->setDrops([]);
+
 		if($cause instanceof EntityDamageByEntityEvent){
 			$killer = $cause->getDamager();
 			if($killer instanceof Player){
@@ -115,6 +117,7 @@ final readonly class Listener implements PMListener{
 				$killer->sendMessage(TextFormat::GREEN . "You killed " . TextFormat::AQUA . $player->getName());
 			}
 		}
+
 		Scoreboard::spawn($player);
 	}
 
@@ -199,6 +202,41 @@ final readonly class Listener implements PMListener{
 
 		if(!Server::getInstance()->isOp($player->getName()) || !$player->isCreative()){
 			$event->cancel();
+		}
+	}
+
+	/**
+	 * @priority HIGHEST
+	 */
+	public function onDamageEvent(EntityDamageByEntityEvent $event) : void{
+		$damager = $event->getDamager();
+		$entity = $event->getEntity();
+
+		if($damager instanceof Player && $entity instanceof Player){
+			if($entity->getHealth() - $event->getFinalDamage() <= 0){
+				$event->cancel();
+				$deathSession = $this->main->getSessionManager()->getSession($entity);
+				$killerSession = $this->main->getSessionManager()->getSession($damager);
+
+				$deathSession->incrementDeaths();
+				$killerSession->incrementKills();
+				$killerSession->addCoins(10);
+
+				if($killerSession->getStreak() % 5 === 0){
+					Utils::sendWorldMessage(TextFormat::AQUA . $damager->getName() . TextFormat::WHITE . " is on a " . TextFormat::GREEN . $killerSession->getStreak() . TextFormat::WHITE . " kill streak!");
+				}
+
+				Utils::sendWorldMessage(TextFormat::GREEN . $damager->getName() . TextFormat::WHITE . " killed " . TextFormat::AQUA . $entity->getName());
+
+				$entity->setHealth(20);
+				$entity->teleport($this->main::SPAWN_COORDS);
+				$entity->getInventory()->clearAll();
+				$entity->getArmorInventory()->clearAll();
+				$entity->getEffects()->clear();
+
+				Scoreboard::spawn($entity);
+				Scoreboard::inArena($damager);
+			}
 		}
 	}
 
