@@ -28,7 +28,6 @@ final class Main extends PluginBase{
 		'x' => 0,
 		'y' => 78,
 		'z' => 0,
-		'world' => 'world'
 	];
 
 	private static Main $instance;
