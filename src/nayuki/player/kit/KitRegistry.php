@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace nayuki\player\kit;
 
+use InvalidArgumentException;
 use nayuki\player\kit\types\Assassin;
 use nayuki\player\kit\types\Berserker;
 use nayuki\player\kit\types\Bomber;
@@ -21,11 +22,15 @@ final class KitRegistry{
 	use RegistryTrait;
 
 	public static function fromString(string $name) : BaseKit|false{
-		$kit = self::_registryFromString(strtolower($name));
-		if(!$kit instanceof BaseKit){
+		try{
+			$kit = self::_registryFromString(strtolower($name));
+			if(!($kit instanceof BaseKit)){
+				return false;
+			}
+			return $kit;
+		}catch(InvalidArgumentException){
 			return false;
 		}
-		return $kit;
 	}
 
 	protected static function setup() : void{
