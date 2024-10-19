@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace nayuki\player\kit\types;
+namespace MizukiCore\nayuki\player\kit\types;
 
 use nayuki\player\kit\BaseKit;
 use pocketmine\entity\effect\EffectInstance;
@@ -13,17 +13,17 @@ use pocketmine\item\Item;
 use pocketmine\item\VanillaItems;
 use pocketmine\player\Player;
 
-final class Tank extends BaseKit{
+final class Pusher extends BaseKit{
 
 	/**
 	 * @return Item[]
 	 */
 	public function getArmorItems() : array{
 		return [
-			VanillaItems::DIAMOND_HELMET()->setUnbreakable(false),
-			VanillaItems::DIAMOND_CHESTPLATE()->setUnbreakable(false),
-			VanillaItems::DIAMOND_LEGGINGS()->setUnbreakable(false),
-			VanillaItems::DIAMOND_BOOTS()->setUnbreakable(false)
+			VanillaItems::LEATHER_CAP()->setUnbreakable(false),
+			VanillaItems::LEATHER_TUNIC()->setUnbreakable(false),
+			VanillaItems::LEATHER_PANTS()->setUnbreakable(false),
+			VanillaItems::LEATHER_BOOTS()->setUnbreakable(false)
 		];
 	}
 
@@ -32,12 +32,12 @@ final class Tank extends BaseKit{
 	 */
 	public function getInventoryItems() : array{
 		return [
-			VanillaItems::IRON_SWORD()->setUnbreakable(false)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::UNBREAKING(), 1)),
+			VanillaItems::STICK()->addEnchantment(new EnchantmentInstance(VanillaEnchantments::KNOCKBACK(), 3)),
 		];
 	}
 
 	public function setEffect(Player $player) : void{
-		$player->getEffects()->add(new EffectInstance(VanillaEffects::SLOWNESS(), 999999, 2, false));
+		$player->getEffects()->add(new EffectInstance(VanillaEffects::SPEED(), 999999, 1, false));
 	}
 
 	public function handleBlockSkill(Player $player, array $args) : void{

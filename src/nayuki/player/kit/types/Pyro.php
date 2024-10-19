@@ -6,6 +6,8 @@ namespace nayuki\player\kit\types;
 
 use nayuki\player\kit\BaseKit;
 use pocketmine\color\Color;
+use pocketmine\entity\effect\EffectInstance;
+use pocketmine\entity\effect\VanillaEffects;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
 use pocketmine\item\Item;
@@ -36,7 +38,7 @@ final class Pyro extends BaseKit{
 	}
 
 	public function setEffect(Player $player) : void{
-
+		$player->getEffects()->add(new EffectInstance(VanillaEffects::FIRE_RESISTANCE(), 999999, 1, false));
 	}
 
 	public function handleBlockSkill(Player $player, array $args) : void{

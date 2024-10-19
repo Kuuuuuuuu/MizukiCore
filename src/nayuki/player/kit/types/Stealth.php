@@ -2,28 +2,27 @@
 
 declare(strict_types=1);
 
-namespace nayuki\player\kit\types;
+namespace MizukiCore\nayuki\player\kit\types;
 
+use nayuki\entities\BomberTNT;
 use nayuki\player\kit\BaseKit;
 use pocketmine\entity\effect\EffectInstance;
 use pocketmine\entity\effect\VanillaEffects;
+use pocketmine\entity\Location;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
 use pocketmine\item\Item;
 use pocketmine\item\VanillaItems;
+use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 
-final class Tank extends BaseKit{
+final class Stealth extends BaseKit{
 
 	/**
 	 * @return Item[]
 	 */
 	public function getArmorItems() : array{
 		return [
-			VanillaItems::DIAMOND_HELMET()->setUnbreakable(false),
-			VanillaItems::DIAMOND_CHESTPLATE()->setUnbreakable(false),
-			VanillaItems::DIAMOND_LEGGINGS()->setUnbreakable(false),
-			VanillaItems::DIAMOND_BOOTS()->setUnbreakable(false)
 		];
 	}
 
@@ -37,11 +36,20 @@ final class Tank extends BaseKit{
 	}
 
 	public function setEffect(Player $player) : void{
-		$player->getEffects()->add(new EffectInstance(VanillaEffects::SLOWNESS(), 999999, 2, false));
+		$player->getEffects()->add(new EffectInstance(VanillaEffects::RESISTANCE(), 999999, 2, false));
+		$player->getEffects()->add(new EffectInstance(VanillaEffects::SPEED(), 999999, 2, false));
 	}
 
 	public function handleBlockSkill(Player $player, array $args) : void{
-		// TODO: Implement handleBlockSkill() method.
+		$itemInHand = (string) $args['itemInHand'];
+
+		if(!str_contains($itemInHand, "Invisible Bomb")){
+			return;
+		}
+
+		$player->getEffects()->add(new EffectInstance(VanillaEffects::INVISIBILITY(), 8, 1, false));
+		$player->getInventory()->setItemInHand($player->getInventory()->getItemInHand()->setCount($player->getInventory()->getItemInHand()->getCount() - 1));
+
 	}
 
 	public function handleItemSkill(Player $player, array $args) : void{

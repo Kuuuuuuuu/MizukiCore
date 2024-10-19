@@ -7,6 +7,8 @@ namespace nayuki\player\kit\types;
 use nayuki\player\kit\BaseKit;
 use pocketmine\entity\effect\EffectInstance;
 use pocketmine\entity\effect\VanillaEffects;
+use pocketmine\item\enchantment\EnchantmentInstance;
+use pocketmine\item\enchantment\VanillaEnchantments;
 use pocketmine\item\Item;
 use pocketmine\item\VanillaItems;
 use pocketmine\player\Player;
@@ -30,8 +32,9 @@ final class Ranger extends BaseKit{
 	 */
 	public function getInventoryItems() : array{
 		return [
-			VanillaItems::BOW()->setUnbreakable(false),
-			VanillaItems::ARROW()->setCount(64)
+			VanillaItems::WOODEN_SWORD()->setUnbreakable(false)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::KNOCKBACK(), 1)),
+			VanillaItems::BOW()->setUnbreakable(false)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::INFINITY(), 1)),
+			VanillaItems::ARROW()->setCount(1)
 		];
 	}
 

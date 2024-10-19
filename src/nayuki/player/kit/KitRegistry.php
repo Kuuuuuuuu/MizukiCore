@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace nayuki\player\kit;
 
 use InvalidArgumentException;
+use MizukiCore\nayuki\player\kit\types\Pusher;
+use MizukiCore\nayuki\player\kit\types\Reaper;
+use MizukiCore\nayuki\player\kit\types\Samurai;
+use MizukiCore\nayuki\player\kit\types\Stealth;
 use nayuki\player\kit\types\Assassin;
 use nayuki\player\kit\types\Berserker;
 use nayuki\player\kit\types\Bomber;
@@ -45,6 +49,10 @@ final class KitRegistry{
 		self::register(new Ranger('Ranger'));
 		self::register(new Tank('Tank'));
 		self::register(new Warrior('Warrior'));
+		self::register(new Pusher('Pusher'));
+		self::register(new Reaper('Reaper'));
+		self::register(new Samurai('Samurai'));
+		self::register(new Stealth('Stealth'));
 	}
 
 	/**
