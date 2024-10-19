@@ -16,7 +16,7 @@ final class ScoreboardUtils{
 	public static function new(Player $player, string $displayName) : void{
 		$session = Main::getInstance()->getSessionManager()->getSession($player);
 
-		if(!$session->currentScoreboard !== null){
+		if($session->currentScoreboard !== null){
 			self::remove($player);
 		}
 

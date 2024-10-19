@@ -16,7 +16,7 @@ final class Session{
 	private bool $scoreboard = true;
 	private bool $cps = true;
 	private bool $initialized = false;
-	public string $currentScoreboard = '';
+	public ?string $currentScoreboard = null;
 
 	public function __construct(private readonly Player $player){ }
 
