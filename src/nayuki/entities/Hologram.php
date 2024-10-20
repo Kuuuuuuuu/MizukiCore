@@ -12,6 +12,7 @@ use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 use pocketmine\network\mcpe\protocol\types\entity\EntityMetadataProperties;
+use pocketmine\utils\TextFormat;
 use function is_array;
 
 final class Hologram extends Entity{
@@ -60,7 +61,7 @@ final class Hologram extends Entity{
 		}
 
 		$isKills = ($this->type === 'kills');
-		$subtitle = $isKills ? "§b§lTop Kills\n" : "§b§lTop Deaths\n";
+		$subtitle = TextFormat::BLUE . TextFormat::BOLD . $isKills ? "Top Kills" : "Top Deaths" . "\n";
 
 		$array = [];
 		foreach(Main::getInstance()->getSessionManager()->getSessions() as $session){
@@ -117,10 +118,10 @@ final class Hologram extends Entity{
 	}
 
 	protected function getInitialDragMultiplier() : float{
-		return 0.02;
+		return 0.00;
 	}
 
 	protected function getInitialGravity() : float{
-		return 0.08;
+		return 0.00;
 	}
 }

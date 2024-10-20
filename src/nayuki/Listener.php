@@ -219,32 +219,45 @@ final readonly class Listener implements PMListener{
 		$damager = $event->getDamager();
 		$entity = $event->getEntity();
 
-		if($damager instanceof Player && $entity instanceof Player){
-			if($entity->getHealth() - $event->getFinalDamage() <= 0){
-				$event->cancel();
-				$deathSession = $this->main->getSessionManager()->getSession($entity);
-				$killerSession = $this->main->getSessionManager()->getSession($damager);
-
-				$deathSession->incrementDeaths();
-				$killerSession->incrementKills();
-				$killerSession->addCoins(10);
-
-				if($killerSession->getStreak() % 5 === 0){
-					Utils::sendWorldMessage(TextFormat::AQUA . $damager->getName() . TextFormat::WHITE . " is on a " . TextFormat::GREEN . $killerSession->getStreak() . TextFormat::WHITE . " kill streak!");
-				}
-
-				Utils::sendWorldMessage(TextFormat::GREEN . $damager->getName() . TextFormat::WHITE . " killed " . TextFormat::AQUA . $entity->getName());
-
-				$entity->setHealth(20);
-				$entity->teleport(new Vector3($this->main::SPAWN_COORDS['x'], $this->main::SPAWN_COORDS['y'], $this->main::SPAWN_COORDS['z']));
-				$entity->getInventory()->clearAll();
-				$entity->getArmorInventory()->clearAll();
-				$entity->getEffects()->clear();
-
-				Scoreboard::spawn($entity);
-				Scoreboard::inArena($damager);
-			}
+		if(!($damager instanceof Player) || !($entity instanceof Player)){
+			return;
 		}
+
+		if($entity->getHealth() - $event->getFinalDamage() > 0){
+			return;
+		}
+
+		$event->cancel();
+
+		$deathSession = $this->main->getSessionManager()->getSession($entity);
+		$killerSession = $this->main->getSessionManager()->getSession($damager);
+
+		$deathSession->incrementDeaths();
+		$killerSession->incrementKills();
+		$killerSession->addCoins(10);
+
+		$killerKit = $killerSession->getCurrentKit();
+		if($killerKit !== null){
+			$killerKit->setEffect($damager);
+			$damager->getInventory()->setContents($killerKit->getInventoryItems());
+			$damager->getArmorInventory()->setContents($killerKit->getArmorItems());
+		}
+
+		$killerStreak = $killerSession->getStreak();
+		if($killerStreak % 5 === 0){
+			Utils::sendWorldMessage(TextFormat::AQUA . $damager->getName() . TextFormat::WHITE . " is on a " . TextFormat::GREEN . $killerStreak . TextFormat::WHITE . " kill streak!");
+		}
+
+		Utils::sendWorldMessage(TextFormat::GREEN . $damager->getName() . TextFormat::WHITE . " killed " . TextFormat::AQUA . $entity->getName());
+
+		$entity->setHealth(20);
+		$entity->teleport(new Vector3($this->main::SPAWN_COORDS['x'], $this->main::SPAWN_COORDS['y'], $this->main::SPAWN_COORDS['z']));
+		$entity->getInventory()->clearAll();
+		$entity->getArmorInventory()->clearAll();
+		$entity->getEffects()->clear();
+
+		Scoreboard::spawn($entity);
+		Scoreboard::inArena($damager);
 	}
 
 	/**
