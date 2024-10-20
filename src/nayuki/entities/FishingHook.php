@@ -68,7 +68,7 @@ final class FishingHook extends Projectile{
 			$event = new EntityDamageByChildEntityEvent($owner, $this, $entityHit, EntityDamageEvent::CAUSE_PROJECTILE, $damage);
 			if(!$event->isCancelled()){
 				$entityHit->attack($event);
-				$entityHit->setMotion($owner->getPosition()->subtractVector($entityHit->getPosition())->normalize()->multiply(3));
+				$entityHit->setMotion($owner->getPosition()->subtractVector($entityHit->getPosition())->normalize()->multiply(2.5));
 			}
 		}
 
