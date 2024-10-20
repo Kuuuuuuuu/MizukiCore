@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace nayuki\player\kit\types;
 
 use nayuki\player\kit\BaseKit;
+use pocketmine\block\Block;
 use pocketmine\color\Color;
 use pocketmine\entity\effect\EffectInstance;
 use pocketmine\entity\effect\VanillaEffects;
@@ -40,11 +41,11 @@ final class Samurai extends BaseKit{
 		$player->getEffects()->add(new EffectInstance(VanillaEffects::SPEED(), 999999, 1, false));
 	}
 
-	public function handleBlockSkill(Player $player, array $args) : void{
+	public function handleBlockSkill(Player $player, Block $blockAgainst, Item $itemOnHand) : void{
 		// TODO: Implement handleBlockSkill() method.
 	}
 
-	public function handleItemSkill(Player $player, array $args) : void{
+	public function handleItemSkill(Player $player, Item $itemOnHand) : void{
 		// TODO: Implement handleItemSkill() method.
 	}
 }

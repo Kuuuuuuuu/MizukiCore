@@ -6,6 +6,7 @@ namespace nayuki\player\kit\types;
 
 use nayuki\entities\BomberTNT;
 use nayuki\player\kit\BaseKit;
+use pocketmine\block\Block;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\entity\effect\EffectInstance;
 use pocketmine\entity\effect\VanillaEffects;
@@ -14,7 +15,6 @@ use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
 use pocketmine\item\Item;
 use pocketmine\item\VanillaItems;
-use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
@@ -46,22 +46,18 @@ final class Bomber extends BaseKit{
 		$player->getEffects()->add(new EffectInstance(VanillaEffects::SPEED(), 999999, 1, false));
 	}
 
-	public function handleBlockSkill(Player $player, array $args) : void{
-		$itemInHand = (string) $args['itemInHand'];
-
-		if(!str_contains($itemInHand, "Bomber TNT")){
+	public function handleBlockSkill(Player $player, Block $blockAgainst, Item $itemOnHand) : void{
+		if(!str_contains($itemOnHand->getName(), "Bomber TNT")){
 			return;
 		}
 
-		$blockAgainst = explode(":", (string) $args['blockAgainst']);
-
-		$bomb = new BomberTNT($player, Location::fromObject((new Vector3((int) $blockAgainst[0], (int) $blockAgainst[1], (int) $blockAgainst[2]))->add(0.5, 2, 0.5), $player->getWorld(), 0, 0));
+		$bomb = new BomberTNT($player, Location::fromObject($blockAgainst->getPosition()->add(0.5, 1, 0.5), $player->getWorld()));
 		$bomb->spawnToAll();
 
 		$player->getInventory()->setItemInHand($player->getInventory()->getItemInHand()->setCount($player->getInventory()->getItemInHand()->getCount() - 1));
 	}
 
-	public function handleItemSkill(Player $player, array $args) : void{
+	public function handleItemSkill(Player $player, Item $itemOnHand) : void{
 		// TODO: Implement handleItemSkill() method.
 	}
 }

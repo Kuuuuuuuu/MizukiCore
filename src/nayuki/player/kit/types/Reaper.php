@@ -6,6 +6,7 @@ namespace nayuki\player\kit\types;
 
 use nayuki\player\kit\BaseKit;
 use nayuki\player\kit\items\ReaperScythe;
+use pocketmine\block\Block;
 use pocketmine\color\Color;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\VanillaEnchantments;
@@ -39,11 +40,11 @@ final class Reaper extends BaseKit{
 	public function setEffect(Player $player) : void{
 	}
 
-	public function handleBlockSkill(Player $player, array $args) : void{
+	public function handleBlockSkill(Player $player, Block $blockAgainst, Item $itemOnHand) : void{
 		// TODO: Implement handleBlockSkill() method.
 	}
 
-	public function handleItemSkill(Player $player, array $args) : void{
+	public function handleItemSkill(Player $player, Item $itemOnHand) : void{
 		// TODO: Implement handleItemSkill() method.
 	}
 }

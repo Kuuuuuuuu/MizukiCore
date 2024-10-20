@@ -11,7 +11,6 @@ use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\player\Player;
-use pocketmine\Server;
 
 final class Utils{
 
@@ -39,12 +38,16 @@ final class Utils{
 			]));
 	}
 
-	public static function vector3ToString(Vector3 $vector) : string{
-		return $vector->x . ':' . $vector->y . ':' . $vector->z;
+	public static function secondsToTicks(int $seconds) : int{
+		return $seconds * 20;
 	}
 
-	public static function sendWorldMessage(string $msg) : void{
-		Server::getInstance()->broadcastMessage($msg);
+	public static function minutesToTicks(int $minutes) : int{
+		return self::secondsToTicks($minutes * 60);
+	}
+
+	public static function hoursToTicks(int $hours) : int{
+		return self::minutesToTicks($hours * 60);
 	}
 
 	public static function randomArenaSpawnCoords() : Vector3{

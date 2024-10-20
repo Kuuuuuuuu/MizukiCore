@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace nayuki\player\kit;
 
+use pocketmine\block\Block;
 use pocketmine\item\Item;
 use pocketmine\player\Player;
 
@@ -31,14 +32,15 @@ abstract class BaseKit{
 	abstract public function setEffect(Player $player) : void;
 
 	/**
-	 * @param Player                  $player The player to handle the skill for.
-	 * @param array<string|int|float> $args The arguments for the skill.
+	 * @param Player $player The player to handle the skill for.
+	 * @param Block  $blockAgainst The block the player is interacting with.
+	 * @param Item   $itemOnHand The item the player is holding.
 	 */
-	abstract public function handleBlockSkill(Player $player, array $args) : void;
+	abstract public function handleBlockSkill(Player $player, Block $blockAgainst, Item $itemOnHand) : void;
 
 	/**
-	 * @param Player                  $player The player to handle the skill for.
-	 * @param array<string|int|float> $args The arguments for the skill.
+	 * @param Player $player The player to handle the skill for.
+	 * @param Item   $itemOnHand The item the player is holding.
 	 */
-	abstract public function handleItemSkill(Player $player, array $args) : void;
+	abstract public function handleItemSkill(Player $player, Item $itemOnHand) : void;
 }
