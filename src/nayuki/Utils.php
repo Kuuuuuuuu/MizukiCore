@@ -53,6 +53,6 @@ final class Utils{
 	public static function randomArenaSpawnCoords() : Vector3{
 		$coords = Main::ARENA_SPAWN_COORDS[array_rand(Main::ARENA_SPAWN_COORDS)];
 		$coords = explode(':', $coords);
-		return new Vector3((int) $coords[0], (int) $coords[1] + 1, (int) $coords[2]);
+		return new Vector3((int) $coords[0], (int) $coords[1] + 2, (int) $coords[2]);
 	}
 }

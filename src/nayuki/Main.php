@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace nayuki;
 
 use nayuki\commands\HologramCommand;
+use nayuki\commands\MarkerCommand;
 use nayuki\commands\NPCCommand;
 use nayuki\entities\BomberTNT;
 use nayuki\entities\FishingHook;
 use nayuki\entities\Hologram;
+use nayuki\entities\Marker;
 use nayuki\entities\NPC;
 use nayuki\handler\ClickHandler;
 use nayuki\player\PlayerHandler;
@@ -26,9 +28,9 @@ use pocketmine\world\World;
 final class Main extends PluginBase{
 	public const PREFIX = TextFormat::DARK_GRAY . "[" . TextFormat::AQUA . "MizukiCore" . TextFormat::DARK_GRAY . "] " . TextFormat::RESET;
 	public const SPAWN_COORDS = [
-		'x' => 0,
-		'y' => 78,
-		'z' => 0,
+		'x' => 13,
+		'y' => 118,
+		'z' => 372,
 	];
 	public const ARENA_SPAWN_COORDS = [
 		"-46:6:-50",
@@ -99,7 +101,7 @@ final class Main extends PluginBase{
 
 		foreach($this->getServer()->getWorldManager()->getWorlds() as $world){
 			foreach($world->getEntities() as $entity){
-				if($entity instanceof Hologram || $entity instanceof NPC){
+				if($entity instanceof Hologram || $entity instanceof NPC || $entity instanceof Marker){
 					return;
 				}
 				$entity->close();
@@ -128,8 +130,11 @@ final class Main extends PluginBase{
 	}
 
 	private function registerCommands() : void{
-		$this->getServer()->getCommandMap()->register("hologram", new HologramCommand());
-		$this->getServer()->getCommandMap()->register("npc", new NPCCommand($this));
+		$this->getServer()->getCommandMap()->registerAll("mizuki", [
+			new HologramCommand(),
+			new NPCCommand($this),
+			new MarkerCommand($this)
+		]);
 	}
 
 	private function registerEntities() : void{
@@ -148,5 +153,9 @@ final class Main extends PluginBase{
 		EntityFactory::getInstance()->register(FishingHook::class, function(World $world, CompoundTag $nbt) : FishingHook{
 			return new FishingHook(EntityDataHelper::parseLocation($nbt, $world), null, $nbt);
 		}, ['FishingHook']);
+
+		EntityFactory::getInstance()->register(Marker::class, function(World $world, CompoundTag $nbt) : Marker{
+			return new Marker(EntityDataHelper::parseLocation($nbt, $world), $nbt);
+		}, ['Marker']);
 	}
 }

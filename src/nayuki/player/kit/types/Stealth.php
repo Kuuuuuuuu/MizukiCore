@@ -53,14 +53,14 @@ final class Stealth extends BaseKit{
 
 		Main::getInstance()->getScheduler()->scheduleDelayedTask(new class($player) extends Task{
 			public function __construct(private readonly Player $player){
-				foreach($player->getWorld()->getPlayers() as $player){
-					$player->hidePlayer($this->player);
+				foreach($player->getWorld()->getPlayers() as $players){
+					$players->hidePlayer($this->player);
 				}
 			}
 
 			public function onRun() : void{
-				foreach($this->player->getWorld()->getPlayers() as $player){
-					$player->showPlayer($this->player);
+				foreach($this->player->getWorld()->getPlayers() as $players){
+					$players->showPlayer($this->player);
 				}
 			}
 		}, Utils::secondsToTicks(5));

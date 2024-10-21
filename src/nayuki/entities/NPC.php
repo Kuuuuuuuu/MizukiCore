@@ -22,7 +22,7 @@ use UnexpectedValueException;
 
 final class NPC extends Human{
 	protected float $gravity = 0.0;
-	protected BaseKit $kit;
+	private BaseKit $kit;
 
 	public function __construct(Location $loc, Skin $skin, CompoundTag $nbt){
 		parent::__construct($loc, $skin, $nbt);

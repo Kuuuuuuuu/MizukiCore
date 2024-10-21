@@ -7,3 +7,5 @@ permissions:
     default: op
   npc.command:
     default: op
+  marker.command:
+    default: op

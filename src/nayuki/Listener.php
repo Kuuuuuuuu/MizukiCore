@@ -6,11 +6,14 @@ namespace nayuki;
 
 use nayuki\entities\FishingHook;
 use nayuki\player\scoreboard\Scoreboard;
+use pocketmine\block\Froglight;
+use pocketmine\block\utils\FroglightType;
 use pocketmine\entity\animation\ArmSwingAnimation;
 use pocketmine\entity\Location;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockBurnEvent;
 use pocketmine\event\block\BlockPlaceEvent;
+use pocketmine\event\block\BlockUpdateEvent;
 use pocketmine\event\block\LeavesDecayEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\inventory\CraftItemEvent;
@@ -22,6 +25,7 @@ use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerItemUseEvent;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
@@ -53,11 +57,11 @@ final readonly class Listener implements PMListener{
 		$player = $event->getPlayer();
 		$event->setJoinMessage("");
 
+		$this->main->getPlayerHandler()->loadPlayerData($player);
+
 		Server::getInstance()->broadcastMessage(TextFormat::WHITE . "[" . TextFormat::GREEN . "+" . TextFormat::WHITE . "] " . TextFormat::AQUA . $player->getName());
 		Scoreboard::spawn($player);
 		Utils::playSound('random.levelup', $player);
-
-		$this->main->getPlayerHandler()->loadPlayerData($player);
 	}
 
 	/**
@@ -254,6 +258,8 @@ final readonly class Listener implements PMListener{
 		$entity->getInventory()->clearAll();
 		$entity->getArmorInventory()->clearAll();
 		$entity->getEffects()->clear();
+		$entity->extinguish();
+		$entity->setFireTicks(0);
 
 		Scoreboard::spawn($entity);
 		Scoreboard::inArena($damager);
@@ -280,12 +286,12 @@ final readonly class Listener implements PMListener{
 		$event->cancel();
 	}
 
-//	/**
-//	 * @priority HIGHEST
-//	 */
-//	public function onBlockUpdate(BlockUpdateEvent $event) : void{
-//		$event->cancel();
-//	}
+	/**
+	 * @priority HIGHEST
+	 */
+	public function onBlockUpdate(BlockUpdateEvent $event) : void{
+		$event->cancel();
+	}
 
 	/**
 	 * @priority HIGHEST
@@ -302,6 +308,25 @@ final readonly class Listener implements PMListener{
 		$msg = $event->getMessage();
 		$this->main->getServer()->broadcastMessage(TextFormat::GRAY . "{$player->getName()} ≫" . TextFormat::WHITE . " $msg");
 		$event->cancel();
+	}
+
+	/**
+	 * @priority HIGHEST
+	 */
+	public function onPlayerMove(PlayerMoveEvent $event) : void{
+		$player = $event->getPlayer();
+
+		if(!$player->isOnGround()){
+			return;
+		}
+
+		$positionBelow = $player->getPosition()->floor()->subtract(0, 1, 0);
+		$belowBlock = $player->getWorld()->getBlock($positionBelow);
+
+		if($belowBlock instanceof Froglight && $belowBlock->getFroglightType() === FroglightType::VERDANT){
+			$dVector = $player->getDirectionVector();
+			$player->setMotion(new Vector3($dVector->x * 2.35, 3.5, $dVector->y * 2.35));
+		}
 	}
 
 	private function spawnFishingHook(Player $player) : void{

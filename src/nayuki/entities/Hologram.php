@@ -20,7 +20,6 @@ final class Hologram extends Entity{
 	private ?string $type = null;
 	private float $height = 0.1;
 	private float $width = 0.1;
-	private int $tick = 0;
 	private string $subtitle = '';
 
 	public function __construct(Location $location, CompoundTag $nbt){
@@ -43,8 +42,7 @@ final class Hologram extends Entity{
 	}
 
 	public function onUpdate(int $currentTick) : bool{
-		++$this->tick;
-		if($this->tick % 20 === 0){
+		if($currentTick % 20 === 0){
 			--$this->countdown;
 			$this->setNameTag($this->subtitle . "\n§eUpdate In: §f" . $this->countdown);
 			if($this->countdown < 1){
@@ -60,8 +58,8 @@ final class Hologram extends Entity{
 			return '';
 		}
 
-		$isKills = ($this->type === 'kills');
-		$subtitle = TextFormat::BLUE . TextFormat::BOLD . $isKills ? "Top Kills" : "Top Deaths" . "\n";
+		$isKills = $this->type == 'kills';
+		$subtitle = TextFormat::BLUE . TextFormat::BOLD . ($isKills ? "Top Kills" : "Top Deaths") . "\n";
 
 		$array = [];
 		foreach(Main::getInstance()->getSessionManager()->getSessions() as $session){
@@ -106,10 +104,9 @@ final class Hologram extends Entity{
 
 	public function saveNBT() : CompoundTag{
 		$nbt = parent::saveNBT();
-		if($this->type === null){
-			return $nbt;
+		if($this->type !== null){
+			$nbt->setString('type', $this->type);
 		}
-		$nbt->setString('type', $this->type);
 		return $nbt;
 	}
 
