@@ -8,10 +8,12 @@ use nayuki\entities\NPC;
 use nayuki\Main;
 use nayuki\player\kit\BaseKit;
 use nayuki\player\kit\KitRegistry;
-use nayuki\Utils;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\DoubleTag;
+use pocketmine\nbt\tag\FloatTag;
+use pocketmine\nbt\tag\ListTag;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use function count;
@@ -79,10 +81,28 @@ final class NPCCommand extends Command{
 	}
 
 	private function spawn(Player $player, BaseKit $kit) : void{
-		$nbt = Utils::createBaseNBT($player->getLocation(), null, $player->getLocation()->getYaw(), $player->getLocation()->getPitch());
 		$pos = $player->getLocation();
-		$nbt->setTag('Skin', CompoundTag::create()->setString('Name', $player->getSkin()->getSkinId())->setByteArray('Data', $player->getSkin()->getSkinData())->setByteArray('CapeData', $player->getSkin()->getCapeData())->setString('GeometryName', $player->getSkin()->getGeometryName())->setByteArray('GeometryData', $player->getSkin()->getGeometryData()));
-		$nbt->setString('kit', $kit->getName());
+		$yaw = $pos->yaw;
+		$pitch = $pos->pitch;
+
+		$nbt = CompoundTag::create()
+			->setTag('Pos', new ListTag([
+				new DoubleTag($pos->x),
+				new DoubleTag($pos->y),
+				new DoubleTag($pos->z),
+			]))
+			->setTag('Motion', new ListTag([
+				new DoubleTag(0.0),
+				new DoubleTag(0.0),
+				new DoubleTag(0.0),
+			]))
+			->setTag('Rotation', new ListTag([
+				new FloatTag($yaw),
+				new FloatTag($pitch),
+			]))
+			->setTag('Skin', CompoundTag::create()->setString('Name', $player->getSkin()->getSkinId())->setByteArray('Data', $player->getSkin()->getSkinData())->setByteArray('CapeData', $player->getSkin()->getCapeData())->setString('GeometryName', $player->getSkin()->getGeometryName())->setByteArray('GeometryData', $player->getSkin()->getGeometryData()))
+			->setString('kit', $kit->getName());
+
 		$entity = new NPC($pos, $player->getSkin(), $nbt);
 		$entity->spawnToAll();
 
