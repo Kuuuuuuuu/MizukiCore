@@ -16,6 +16,7 @@ use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\BlockUpdateEvent;
 use pocketmine\event\block\LeavesDecayEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\inventory\CraftItemEvent;
 use pocketmine\event\Listener as PMListener;
 use pocketmine\event\player\PlayerChatEvent;
@@ -116,7 +117,7 @@ final readonly class Listener implements PMListener{
 
 		if($cause instanceof EntityDamageByEntityEvent){
 			$killer = $cause->getDamager();
-			if($killer instanceof Player){
+			if($killer instanceof Player && $killer->getId() !== $player->getId()){
 				$killerSession = $this->main->getSessionManager()->getSession($killer);
 				$killerSession->incrementKills();
 				$killerSession->addCoins(10);
@@ -189,9 +190,8 @@ final readonly class Listener implements PMListener{
 			$this->spawnFishingHook($player);
 		}else{
 			$session->getCurrentKit()?->handleItemSkill($player, $item);
+			$player->broadcastAnimation(new ArmSwingAnimation($player));
 		}
-
-		$player->broadcastAnimation(new ArmSwingAnimation($player));
 	}
 
 	/**
@@ -218,51 +218,57 @@ final readonly class Listener implements PMListener{
 	/**
 	 * @priority HIGHEST
 	 */
-	public function onDamageEvent(EntityDamageByEntityEvent $event) : void{
-		$damager = $event->getDamager();
-		$entity = $event->getEntity();
+	public function onDamageEvent(EntityDamageEvent $event) : void{
+		$cause = $event->getCause();
 
-		if(!($damager instanceof Player) || !($entity instanceof Player)){
-			return;
+		if($cause === EntityDamageEvent::CAUSE_FALL){
+			$event->cancel();
+		}elseif($event instanceof EntityDamageByEntityEvent){
+			$damager = $event->getDamager();
+			$entity = $event->getEntity();
+
+			if(!($damager instanceof Player) || !($entity instanceof Player)){
+				return;
+			}
+
+			if($entity->getHealth() - $event->getFinalDamage() > 0){
+				return;
+			}
+
+			$event->cancel();
+
+			$deathSession = $this->main->getSessionManager()->getSession($entity);
+			$killerSession = $this->main->getSessionManager()->getSession($damager);
+
+			$deathSession->incrementDeaths();
+			$killerSession->incrementKills();
+			$killerSession->addCoins(10);
+
+			$killerKit = $killerSession->getCurrentKit();
+			if($killerKit !== null){
+				$killerKit->setEffect($damager);
+				$damager->getInventory()->setContents($killerKit->getInventoryItems());
+				$damager->getArmorInventory()->setContents($killerKit->getArmorItems());
+			}
+
+			$killerStreak = $killerSession->getStreak();
+			if($killerStreak % 5 === 0){
+				$this->main->getServer()->broadcastMessage(TextFormat::AQUA . $damager->getName() . TextFormat::WHITE . " is on a " . TextFormat::GREEN . $killerStreak . TextFormat::WHITE . " kill streak!");
+			}
+
+			$this->main->getServer()->broadcastMessage(TextFormat::GREEN . $damager->getName() . TextFormat::WHITE . " killed " . TextFormat::AQUA . $entity->getName());
+
+			$entity->setHealth(20);
+			$entity->teleport(new Vector3($this->main::SPAWN_COORDS['x'], $this->main::SPAWN_COORDS['y'], $this->main::SPAWN_COORDS['z']));
+			$entity->getInventory()->clearAll();
+			$entity->getArmorInventory()->clearAll();
+			$entity->getEffects()->clear();
+			$entity->extinguish();
+			$entity->setFireTicks(0);
+
+			Scoreboard::spawn($entity);
+			Scoreboard::inArena($damager);
 		}
-
-		if($entity->getHealth() - $event->getFinalDamage() > 0){
-			return;
-		}
-
-		$event->cancel();
-
-		$deathSession = $this->main->getSessionManager()->getSession($entity);
-		$killerSession = $this->main->getSessionManager()->getSession($damager);
-
-		$deathSession->incrementDeaths();
-		$killerSession->incrementKills();
-		$killerSession->addCoins(10);
-
-		$killerKit = $killerSession->getCurrentKit();
-		if($killerKit !== null){
-			$killerKit->setEffect($damager);
-			$damager->getInventory()->setContents($killerKit->getInventoryItems());
-			$damager->getArmorInventory()->setContents($killerKit->getArmorItems());
-		}
-
-		$killerStreak = $killerSession->getStreak();
-		if($killerStreak % 5 === 0){
-			$this->main->getServer()->broadcastMessage(TextFormat::AQUA . $damager->getName() . TextFormat::WHITE . " is on a " . TextFormat::GREEN . $killerStreak . TextFormat::WHITE . " kill streak!");
-		}
-
-		$this->main->getServer()->broadcastMessage(TextFormat::GREEN . $damager->getName() . TextFormat::WHITE . " killed " . TextFormat::AQUA . $entity->getName());
-
-		$entity->setHealth(20);
-		$entity->teleport(new Vector3($this->main::SPAWN_COORDS['x'], $this->main::SPAWN_COORDS['y'], $this->main::SPAWN_COORDS['z']));
-		$entity->getInventory()->clearAll();
-		$entity->getArmorInventory()->clearAll();
-		$entity->getEffects()->clear();
-		$entity->extinguish();
-		$entity->setFireTicks(0);
-
-		Scoreboard::spawn($entity);
-		Scoreboard::inArena($damager);
 	}
 
 	/**

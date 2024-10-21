@@ -6,9 +6,9 @@ namespace nayuki\commands;
 
 use nayuki\entities\Hologram;
 use nayuki\Main;
-use nayuki\Utils;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use function in_array;
@@ -64,9 +64,7 @@ final class HologramCommand extends Command{
 	}
 
 	public function spawn(Player $player, string $type) : void{
-		$nbt = Utils::createBaseNBT($player->getPosition(), null, $player->getLocation()->getYaw(), $player->getLocation()->getPitch());
-		$nbt->setString('type', $type);
-		$entity = new Hologram($player->getLocation(), $nbt);
+		$entity = new Hologram($player->getLocation(), CompoundTag::create()->setString('type', $type));
 		$entity->setNameTagAlwaysVisible();
 		$entity->spawnToAll();
 
