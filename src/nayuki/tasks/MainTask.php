@@ -12,8 +12,8 @@ use pocketmine\item\VanillaItems;
 use pocketmine\math\Vector3;
 
 final class MainTask extends AbstractTask{
-	private const ENTITY_CLEANUP_INTERVAL = 40;
-	private const GOLDEN_APPLE_SPAWN_INTERVAL = 10;
+	private const ENTITY_CLEANUP_INTERVAL = 30;
+	private const GOLDEN_APPLE_SPAWN_INTERVAL = 5;
 
 	public function __construct(private readonly Main $main, int $period = 1){ parent::__construct($period); }
 

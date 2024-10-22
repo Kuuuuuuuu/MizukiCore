@@ -372,8 +372,8 @@ final readonly class Listener implements PMListener{
 
 		/** @var Froglight $belowBlock */
 		if($belowBlock->getFroglightType() === FroglightType::VERDANT){
-			$dVector = $player->getDirectionVector();
-			$player->setMotion(new Vector3($dVector->x * 2.35, 2.5, $dVector->y * 2.35));
+			$dVector = $player->getDirectionPlane()->normalize()->multiply(2);
+			$player->setMotion(new Vector3($dVector->x, 3.5, $dVector->y));
 		}
 	}
 
