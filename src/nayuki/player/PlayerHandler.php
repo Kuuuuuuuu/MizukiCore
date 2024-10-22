@@ -6,9 +6,12 @@ namespace nayuki\player;
 
 use nayuki\entities\FishingHook;
 use nayuki\Main;
+use nayuki\player\scoreboard\Scoreboard;
 use nayuki\tasks\async\AsyncLoadPlayerData;
 use nayuki\tasks\async\AsyncSavePlayerData;
+use nayuki\Utils;
 use pocketmine\entity\Attribute;
+use pocketmine\math\Vector3;
 use pocketmine\player\Player;
 
 final readonly class PlayerHandler{
@@ -36,6 +39,29 @@ final readonly class PlayerHandler{
 	public function setFishing(Player $player, ?FishingHook $hook) : void{
 		$session = $this->main->getSessionManager()->getSession($player);
 		$session->setFishing($hook);
+	}
+
+	public function handlePlayerDeath(Player $player) : void{
+		$session = $this->main->getSessionManager()->getSession($player);
+		$session->incrementDeaths();
+		$session->setCurrentKit(null);
+
+		// Reset player
+		$player->setHealth(20);
+		$player->teleport(new Vector3(
+			$this->main::SPAWN_COORDS['x'],
+			$this->main::SPAWN_COORDS['y'],
+			$this->main::SPAWN_COORDS['z']
+		));
+
+		Scoreboard::spawn($player);
+		Utils::playSound('game.player.die', $player);
+
+		$player->getInventory()->clearAll();
+		$player->getArmorInventory()->clearAll();
+		$player->getCursorInventory()->clearAll();
+		$player->getEffects()->clear();
+		$player->extinguish();
 	}
 
 	public function applyKnockBack(Player $player, Player $damager) : void{
