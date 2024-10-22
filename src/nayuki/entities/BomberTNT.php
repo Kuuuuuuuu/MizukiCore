@@ -20,6 +20,7 @@ final class BomberTNT extends PrimedTNT{
 
 	public function __construct(private readonly ?Player $igniter, Location $location, ?CompoundTag $nbt = null){
 		parent::__construct($location, $nbt);
+		$this->setFuse(20); // 1 second
 	}
 
 	public function explode() : void{
