@@ -21,10 +21,10 @@ final class Freezer extends BaseKit{
 	 */
 	public function getArmorItems() : array{
 		return [
-			VanillaItems::LEATHER_CAP()->setUnbreakable(false)->setCustomColor(Color::mix(color::fromRGB(255), color::fromRGB(255), color::fromRGB(255))),
-			VanillaItems::LEATHER_TUNIC()->setUnbreakable(false)->setCustomColor(Color::mix(color::fromRGB(0), color::fromRGB(0), color::fromRGB(255))),
-			VanillaItems::LEATHER_PANTS()->setUnbreakable(false)->setCustomColor(Color::mix(color::fromRGB(0), color::fromRGB(0), color::fromRGB(255))),
-			VanillaItems::LEATHER_BOOTS()->setUnbreakable(false)->setCustomColor(Color::mix(color::fromRGB(255), color::fromRGB(255), color::fromRGB(255))),
+			VanillaItems::LEATHER_CAP()->setUnbreakable()->setCustomColor(Color::mix(color::fromRGB(255), color::fromRGB(255), color::fromRGB(255))),
+			VanillaItems::LEATHER_TUNIC()->setUnbreakable()->setCustomColor(Color::mix(color::fromRGB(0), color::fromRGB(0), color::fromRGB(255))),
+			VanillaItems::LEATHER_PANTS()->setUnbreakable()->setCustomColor(Color::mix(color::fromRGB(0), color::fromRGB(0), color::fromRGB(255))),
+			VanillaItems::LEATHER_BOOTS()->setUnbreakable()->setCustomColor(Color::mix(color::fromRGB(255), color::fromRGB(255), color::fromRGB(255))),
 		];
 	}
 
@@ -33,7 +33,7 @@ final class Freezer extends BaseKit{
 	 */
 	public function getInventoryItems() : array{
 		return [
-			(new FreezerSword())->setUnbreakable(false)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::SHARPNESS(), 1)),
+			(new FreezerSword())->setUnbreakable()->addEnchantment(new EnchantmentInstance(VanillaEnchantments::SHARPNESS(), 1)),
 		];
 	}
 

@@ -21,10 +21,10 @@ final class Reaper extends BaseKit{
 	 */
 	public function getArmorItems() : array{
 		return [
-			VanillaItems::LEATHER_CAP()->setUnbreakable(false)->setCustomColor(Color::mix(color::fromRGB(0), color::fromRGB(0), color::fromRGB(0))),
-			VanillaItems::LEATHER_TUNIC()->setUnbreakable(false)->setCustomColor(Color::mix(color::fromRGB(0), color::fromRGB(0), color::fromRGB(0))),
-			VanillaItems::LEATHER_PANTS()->setUnbreakable(false)->setCustomColor(Color::mix(color::fromRGB(0), color::fromRGB(0), color::fromRGB(0))),
-			VanillaItems::LEATHER_BOOTS()->setUnbreakable(false)->setCustomColor(Color::mix(color::fromRGB(0), color::fromRGB(0), color::fromRGB(0))),
+			VanillaItems::LEATHER_CAP()->setUnbreakable()->setCustomColor(Color::mix(color::fromRGB(0), color::fromRGB(0), color::fromRGB(0))),
+			VanillaItems::LEATHER_TUNIC()->setUnbreakable()->setCustomColor(Color::mix(color::fromRGB(0), color::fromRGB(0), color::fromRGB(0))),
+			VanillaItems::LEATHER_PANTS()->setUnbreakable()->setCustomColor(Color::mix(color::fromRGB(0), color::fromRGB(0), color::fromRGB(0))),
+			VanillaItems::LEATHER_BOOTS()->setUnbreakable()->setCustomColor(Color::mix(color::fromRGB(0), color::fromRGB(0), color::fromRGB(0))),
 		];
 	}
 

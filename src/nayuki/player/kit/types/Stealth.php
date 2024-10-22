@@ -20,11 +20,19 @@ use pocketmine\utils\TextFormat;
 
 final class Stealth extends BaseKit{
 
+	private static string $skillName = TextFormat::RESET . TextFormat::GREEN . "Invisible Gem" . TextFormat::RESET . TextFormat::WHITE . " (กดค้างเพื่อใช้งาน)";
+	private float $invisibleTime = 0;
+
 	/**
 	 * @return Item[]
 	 */
 	public function getArmorItems() : array{
-		return [];
+		return [
+			VanillaItems::LEATHER_CAP()->setUnbreakable(),
+			VanillaItems::IRON_CHESTPLATE()->setUnbreakable(),
+			VanillaItems::LEATHER_PANTS()->setUnbreakable(),
+			VanillaItems::LEATHER_BOOTS()->setUnbreakable(),
+		];
 	}
 
 	/**
@@ -32,8 +40,8 @@ final class Stealth extends BaseKit{
 	 */
 	public function getInventoryItems() : array{
 		return [
-			VanillaItems::IRON_SWORD()->setUnbreakable(false)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::UNBREAKING(), 1)),
-			VanillaItems::EMERALD()->setCustomName(TextFormat::GREEN . "Invisible Gem" . TextFormat::RESET . TextFormat::WHITE . " (กดค้างเพื่อใช้งาน)"),
+			VanillaItems::IRON_SWORD()->setUnbreakable()->addEnchantment(new EnchantmentInstance(VanillaEnchantments::SHARPNESS(), 2)),
+			VanillaItems::EMERALD()->setCustomName(self::$skillName)->setCount(3),
 		];
 	}
 
@@ -47,16 +55,23 @@ final class Stealth extends BaseKit{
 	}
 
 	public function handleItemSkill(Player $player, Item $itemOnHand) : void{
-		if(!str_contains($itemOnHand->getName(), "Invisible Gem")){
+		if($itemOnHand->getTypeId() !== VanillaItems::EMERALD()->getTypeId() || $itemOnHand->getCustomName() !== self::$skillName){
 			return;
 		}
 
+		if(microtime(true) - $this->invisibleTime < 5){
+			$player->sendMessage(Main::PREFIX . TextFormat::RED . "กรุณารอสกิลนี้ใช้งานใหม่อีกครั้งในอีก " . (5 - round(microtime(true) - $this->invisibleTime, 1)) . " วินาที");
+			return;
+		}
+
+		$this->invisibleTime = microtime(true);
+
+		foreach($player->getWorld()->getPlayers() as $players){
+			$players->hidePlayer($player);
+		}
+
 		Main::getInstance()->getScheduler()->scheduleDelayedTask(new class($player) extends Task{
-			public function __construct(private readonly Player $player){
-				foreach($player->getWorld()->getPlayers() as $players){
-					$players->hidePlayer($this->player);
-				}
-			}
+			public function __construct(private readonly Player $player){ }
 
 			public function onRun() : void{
 				foreach($this->player->getWorld()->getPlayers() as $players){

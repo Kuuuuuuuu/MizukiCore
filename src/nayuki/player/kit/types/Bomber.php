@@ -25,10 +25,10 @@ final class Bomber extends BaseKit{
 	 */
 	public function getArmorItems() : array{
 		return [
-			VanillaItems::CHAINMAIL_HELMET()->setUnbreakable(false),
-			VanillaItems::CHAINMAIL_CHESTPLATE()->setUnbreakable(false)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::PROTECTION(), 2)),
-			VanillaItems::CHAINMAIL_LEGGINGS()->setUnbreakable(false),
-			VanillaItems::CHAINMAIL_BOOTS()->setUnbreakable(false)
+			VanillaItems::CHAINMAIL_HELMET()->setUnbreakable(),
+			VanillaItems::CHAINMAIL_CHESTPLATE()->setUnbreakable()->addEnchantment(new EnchantmentInstance(VanillaEnchantments::PROTECTION(), 2)),
+			VanillaItems::CHAINMAIL_LEGGINGS()->setUnbreakable(),
+			VanillaItems::CHAINMAIL_BOOTS()->setUnbreakable()
 		];
 	}
 
@@ -37,7 +37,7 @@ final class Bomber extends BaseKit{
 	 */
 	public function getInventoryItems() : array{
 		return [
-			VanillaItems::IRON_SWORD()->setUnbreakable(false),
+			VanillaItems::IRON_SWORD()->setUnbreakable(),
 			VanillaBlocks::TNT()->asItem()->setCount(8)->setCustomName(TextFormat::RESET . TextFormat::RED . "Bomber TNT" . TextFormat::RESET . TextFormat::WHITE . " (กดวางที่พื้นเพื่อใช้งาน)"),
 		];
 	}
@@ -47,7 +47,7 @@ final class Bomber extends BaseKit{
 	}
 
 	public function handleBlockSkill(Player $player, Block $blockAgainst, Item $itemOnHand) : void{
-		if(!str_contains($itemOnHand->getName(), "Bomber TNT")){
+		if($itemOnHand->getTypeId() !== VanillaBlocks::TNT()->asItem()->getTypeId() || $itemOnHand->getCustomName() !== TextFormat::RESET . TextFormat::RED . "Bomber TNT" . TextFormat::RESET . TextFormat::WHITE . " (กดวางที่พื้นเพื่อใช้งาน)"){
 			return;
 		}
 

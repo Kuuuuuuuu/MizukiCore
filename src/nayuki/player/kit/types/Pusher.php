@@ -21,10 +21,10 @@ final class Pusher extends BaseKit{
 	 */
 	public function getArmorItems() : array{
 		return [
-			VanillaItems::LEATHER_CAP()->setUnbreakable(false),
-			VanillaItems::LEATHER_TUNIC()->setUnbreakable(false),
-			VanillaItems::LEATHER_PANTS()->setUnbreakable(false),
-			VanillaItems::LEATHER_BOOTS()->setUnbreakable(false)
+			VanillaItems::LEATHER_CAP()->setUnbreakable(),
+			VanillaItems::LEATHER_TUNIC()->setUnbreakable(),
+			VanillaItems::LEATHER_PANTS()->setUnbreakable(),
+			VanillaItems::LEATHER_BOOTS()->setUnbreakable()
 		];
 	}
 

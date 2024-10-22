@@ -7,6 +7,7 @@ namespace nayuki;
 use nayuki\commands\LeaderboardCommand;
 use nayuki\commands\MarkerCommand;
 use nayuki\commands\NPCCommand;
+use nayuki\entities\Base\Hologram;
 use nayuki\entities\BomberTNT;
 use nayuki\entities\FishingHook;
 use nayuki\entities\Leaderboard;
@@ -27,20 +28,20 @@ use pocketmine\world\World;
 
 final class Main extends PluginBase{
 	public const PREFIX = TextFormat::DARK_GRAY . "[" . TextFormat::AQUA . "MizukiCore" . TextFormat::DARK_GRAY . "] " . TextFormat::RESET;
-	public const SPAWN_COORDS = [
+	public const LOBBY_COORDS = [
 		"x" => 13,
 		"y" => 118,
 		"z" => 372,
 	];
-	public const ARENA_SPAWN_COORDS = [
-		"-46:6:-50",
+	public const ARENA_LOBBY_COORDS = [
+		"-46:32:-50",
 		"20:7:2",
 		"16:20:-22",
 		"21:19:85",
 		"44:37:-69",
 		"82:-13:1",
 		"-91:48:100",
-		"-95:7:-33",
+		"-95:7:-32",
 		"-117:17:-108",
 		"-23:7:30",
 		"-55:6:9"
@@ -106,10 +107,10 @@ final class Main extends PluginBase{
 
 		foreach($this->getServer()->getWorldManager()->getWorlds() as $world){
 			foreach($world->getEntities() as $entity){
-				if($entity instanceof Leaderboard || $entity instanceof NPC || $entity instanceof Marker){
+				if($entity instanceof Hologram || $entity instanceof NPC){
 					return;
 				}
-				$entity->close();
+				$entity->flagForDespawn();
 			}
 		}
 	}
@@ -130,7 +131,7 @@ final class Main extends PluginBase{
 		foreach($worldManager->getWorlds() as $world){
 			$world->setTime(0);
 			$world->stopTime();
-			$world->setSpawnLocation(new Vector3(self::SPAWN_COORDS['x'], self::SPAWN_COORDS['y'], self::SPAWN_COORDS['z']));
+			$world->setSpawnLocation(new Vector3(self::LOBBY_COORDS['x'], self::LOBBY_COORDS['y'], self::LOBBY_COORDS['z']));
 		}
 	}
 

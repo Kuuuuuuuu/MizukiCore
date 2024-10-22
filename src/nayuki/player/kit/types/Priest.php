@@ -18,10 +18,10 @@ final class Priest extends BaseKit{
 	 */
 	public function getArmorItems() : array{
 		return [
-			VanillaItems::GOLDEN_HELMET()->setUnbreakable(false),
-			VanillaItems::GOLDEN_CHESTPLATE()->setUnbreakable(false),
-			VanillaItems::GOLDEN_LEGGINGS()->setUnbreakable(false),
-			VanillaItems::GOLDEN_BOOTS()->setUnbreakable(false)
+			VanillaItems::GOLDEN_HELMET()->setUnbreakable(),
+			VanillaItems::GOLDEN_CHESTPLATE()->setUnbreakable(),
+			VanillaItems::GOLDEN_LEGGINGS()->setUnbreakable(),
+			VanillaItems::GOLDEN_BOOTS()->setUnbreakable()
 		];
 	}
 
@@ -30,7 +30,7 @@ final class Priest extends BaseKit{
 	 */
 	public function getInventoryItems() : array{
 		return [
-			VanillaItems::IRON_SWORD()->setUnbreakable(false),
+			VanillaItems::IRON_SWORD()->setUnbreakable(),
 			VanillaItems::POTION()->setType(PotionType::HEALING)->setCount(8)
 		];
 	}

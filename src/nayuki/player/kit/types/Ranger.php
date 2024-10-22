@@ -21,10 +21,10 @@ final class Ranger extends BaseKit{
 	 */
 	public function getArmorItems() : array{
 		return [
-			VanillaItems::LEATHER_CAP()->setUnbreakable(false),
-			VanillaItems::LEATHER_TUNIC()->setUnbreakable(false),
-			VanillaItems::LEATHER_PANTS()->setUnbreakable(false),
-			VanillaItems::LEATHER_BOOTS()->setUnbreakable(false)
+			VanillaItems::LEATHER_CAP()->setUnbreakable(),
+			VanillaItems::LEATHER_TUNIC()->setUnbreakable(),
+			VanillaItems::LEATHER_PANTS()->setUnbreakable(),
+			VanillaItems::LEATHER_BOOTS()->setUnbreakable()
 		];
 	}
 
@@ -33,8 +33,8 @@ final class Ranger extends BaseKit{
 	 */
 	public function getInventoryItems() : array{
 		return [
-			VanillaItems::WOODEN_SWORD()->setUnbreakable(false)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::KNOCKBACK(), 1)),
-			VanillaItems::BOW()->setUnbreakable(false)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::INFINITY(), 1)),
+			VanillaItems::WOODEN_SWORD()->setUnbreakable()->addEnchantment(new EnchantmentInstance(VanillaEnchantments::KNOCKBACK(), 1)),
+			VanillaItems::BOW()->setUnbreakable()->addEnchantment(new EnchantmentInstance(VanillaEnchantments::INFINITY(), 1)),
 			VanillaItems::ARROW()->setCount(1)
 		];
 	}

@@ -17,10 +17,10 @@ final class Warrior extends BaseKit{
 	 */
 	public function getArmorItems() : array{
 		return [
-			VanillaItems::IRON_HELMET()->setUnbreakable(false),
-			VanillaItems::IRON_CHESTPLATE()->setUnbreakable(false),
-			VanillaItems::IRON_LEGGINGS()->setUnbreakable(false),
-			VanillaItems::IRON_BOOTS()->setUnbreakable(false)
+			VanillaItems::IRON_HELMET()->setUnbreakable(),
+			VanillaItems::IRON_CHESTPLATE()->setUnbreakable(),
+			VanillaItems::IRON_LEGGINGS()->setUnbreakable(),
+			VanillaItems::IRON_BOOTS()->setUnbreakable()
 		];
 	}
 
@@ -29,7 +29,7 @@ final class Warrior extends BaseKit{
 	 */
 	public function getInventoryItems() : array{
 		return [
-			VanillaItems::DIAMOND_SWORD()->setUnbreakable(false)
+			VanillaItems::DIAMOND_SWORD()->setUnbreakable()
 		];
 	}
 

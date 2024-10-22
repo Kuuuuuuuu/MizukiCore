@@ -21,10 +21,10 @@ final class Assassin extends BaseKit{
 	 */
 	public function getArmorItems() : array{
 		return [
-			VanillaItems::LEATHER_CAP()->setUnbreakable(false),
-			VanillaItems::CHAINMAIL_CHESTPLATE()->setUnbreakable(false),
-			VanillaItems::LEATHER_PANTS()->setUnbreakable(false),
-			VanillaItems::LEATHER_BOOTS()->setUnbreakable(false)
+			VanillaItems::LEATHER_CAP()->setUnbreakable(),
+			VanillaItems::CHAINMAIL_CHESTPLATE()->setUnbreakable(),
+			VanillaItems::LEATHER_PANTS()->setUnbreakable(),
+			VanillaItems::LEATHER_BOOTS()->setUnbreakable()
 		];
 	}
 
@@ -33,7 +33,7 @@ final class Assassin extends BaseKit{
 	 */
 	public function getInventoryItems() : array{
 		return [
-			VanillaItems::DIAMOND_SWORD()->setUnbreakable(false),
+			VanillaItems::DIAMOND_SWORD()->setUnbreakable(),
 			VanillaItems::GOLDEN_SWORD()->addEnchantment(new EnchantmentInstance(VanillaEnchantments::SHARPNESS(), 32767))->setDamage(VanillaItems::GOLDEN_SWORD()->getMaxDurability() - 1),
 		];
 	}

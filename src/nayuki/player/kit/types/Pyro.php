@@ -22,10 +22,10 @@ final class Pyro extends BaseKit{
 	 */
 	public function getArmorItems() : array{
 		return [
-			VanillaItems::LEATHER_CAP()->setUnbreakable(false)->setCustomColor(Color::mix(color::fromRGB(255), color::fromRGB(255), color::fromRGB(0))),
-			VanillaItems::CHAINMAIL_CHESTPLATE()->setUnbreakable(false),
-			VanillaItems::CHAINMAIL_LEGGINGS()->setUnbreakable(false),
-			VanillaItems::CHAINMAIL_BOOTS()->setUnbreakable(false),
+			VanillaItems::LEATHER_CAP()->setUnbreakable()->setCustomColor(Color::mix(color::fromRGB(255), color::fromRGB(255), color::fromRGB(0))),
+			VanillaItems::CHAINMAIL_CHESTPLATE()->setUnbreakable(),
+			VanillaItems::CHAINMAIL_LEGGINGS()->setUnbreakable(),
+			VanillaItems::CHAINMAIL_BOOTS()->setUnbreakable(),
 		];
 	}
 
@@ -34,7 +34,7 @@ final class Pyro extends BaseKit{
 	 */
 	public function getInventoryItems() : array{
 		return [
-			VanillaItems::STONE_SWORD()->setUnbreakable(false)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::FIRE_ASPECT(), 2))->addEnchantment(new EnchantmentInstance(VanillaEnchantments::SHARPNESS(), 1)),
+			VanillaItems::STONE_SWORD()->setUnbreakable()->addEnchantment(new EnchantmentInstance(VanillaEnchantments::FIRE_ASPECT(), 2))->addEnchantment(new EnchantmentInstance(VanillaEnchantments::SHARPNESS(), 1)),
 		];
 	}
 

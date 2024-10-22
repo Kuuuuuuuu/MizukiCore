@@ -22,9 +22,9 @@ final class Samurai extends BaseKit{
 	 */
 	public function getArmorItems() : array{
 		return [
-			VanillaItems::LEATHER_CAP()->setUnbreakable(false)->setCustomColor(Color::mix(color::fromRGB(0), color::fromRGB(0), color::fromRGB(255))),
-			VanillaItems::DIAMOND_CHESTPLATE()->setUnbreakable(false),
-			VanillaItems::DIAMOND_BOOTS()->setUnbreakable(false)
+			VanillaItems::LEATHER_CAP()->setUnbreakable()->setCustomColor(Color::mix(color::fromRGB(0), color::fromRGB(0), color::fromRGB(255))),
+			VanillaItems::DIAMOND_CHESTPLATE()->setUnbreakable(),
+			VanillaItems::DIAMOND_BOOTS()->setUnbreakable()
 		];
 	}
 

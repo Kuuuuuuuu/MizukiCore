@@ -21,10 +21,10 @@ final class Berserker extends BaseKit{
 	 */
 	public function getArmorItems() : array{
 		return [
-			VanillaItems::IRON_HELMET()->setUnbreakable(false),
-			VanillaItems::LEATHER_TUNIC()->setUnbreakable(false),
-			VanillaItems::IRON_LEGGINGS()->setUnbreakable(false),
-			VanillaItems::LEATHER_BOOTS()->setUnbreakable(false)
+			VanillaItems::IRON_HELMET()->setUnbreakable(),
+			VanillaItems::LEATHER_TUNIC()->setUnbreakable(),
+			VanillaItems::IRON_LEGGINGS()->setUnbreakable(),
+			VanillaItems::LEATHER_BOOTS()->setUnbreakable()
 		];
 	}
 
@@ -33,7 +33,7 @@ final class Berserker extends BaseKit{
 	 */
 	public function getInventoryItems() : array{
 		return [
-			VanillaItems::DIAMOND_AXE()->setUnbreakable(false)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::SHARPNESS(), 2)),
+			VanillaItems::DIAMOND_AXE()->setUnbreakable()->addEnchantment(new EnchantmentInstance(VanillaEnchantments::SHARPNESS(), 2)),
 		];
 	}
 
