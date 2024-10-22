@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace nayuki;
 
-use nayuki\commands\HologramCommand;
+use nayuki\commands\LeaderboardCommand;
 use nayuki\commands\MarkerCommand;
 use nayuki\commands\NPCCommand;
 use nayuki\entities\BomberTNT;
 use nayuki\entities\FishingHook;
-use nayuki\entities\Hologram;
+use nayuki\entities\Leaderboard;
 use nayuki\entities\Marker;
 use nayuki\entities\NPC;
 use nayuki\handler\ClickHandler;
@@ -28,9 +28,9 @@ use pocketmine\world\World;
 final class Main extends PluginBase{
 	public const PREFIX = TextFormat::DARK_GRAY . "[" . TextFormat::AQUA . "MizukiCore" . TextFormat::DARK_GRAY . "] " . TextFormat::RESET;
 	public const SPAWN_COORDS = [
-		'x' => 13,
-		'y' => 118,
-		'z' => 372,
+		"x" => 13,
+		"y" => 118,
+		"z" => 372,
 	];
 	public const ARENA_SPAWN_COORDS = [
 		"-46:6:-50",
@@ -38,7 +38,7 @@ final class Main extends PluginBase{
 		"16:20:-22",
 		"21:19:85",
 		"44:37:-69",
-		"82:-16:1",
+		"82:-13:1",
 		"-91:48:100",
 		"-95:7:-33",
 		"-117:17:-108",
@@ -85,11 +85,16 @@ final class Main extends PluginBase{
 		$this->getServer()->getPluginManager()->registerEvents(new Listener($this), $this);
 		$this->getLogger()->info(TextFormat::DARK_GREEN . "enabled!");
 
-		new MainTask(1);
+		new MainTask($this, 1);
 
 		$this->loadWorlds();
 		$this->registerEntities();
-		$this->registerCommands();
+
+		$this->getServer()->getCommandMap()->registerAll("mizuki", [
+			new LeaderboardCommand(),
+			new NPCCommand($this),
+			new MarkerCommand($this)
+		]);
 	}
 
 	public function onDisable() : void{
@@ -101,7 +106,7 @@ final class Main extends PluginBase{
 
 		foreach($this->getServer()->getWorldManager()->getWorlds() as $world){
 			foreach($world->getEntities() as $entity){
-				if($entity instanceof Hologram || $entity instanceof NPC || $entity instanceof Marker){
+				if($entity instanceof Leaderboard || $entity instanceof NPC || $entity instanceof Marker){
 					return;
 				}
 				$entity->close();
@@ -129,18 +134,10 @@ final class Main extends PluginBase{
 		}
 	}
 
-	private function registerCommands() : void{
-		$this->getServer()->getCommandMap()->registerAll("mizuki", [
-			new HologramCommand(),
-			new NPCCommand($this),
-			new MarkerCommand($this)
-		]);
-	}
-
 	private function registerEntities() : void{
-		EntityFactory::getInstance()->register(Hologram::class, function(World $world, CompoundTag $nbt) : Hologram{
-			return new Hologram(EntityDataHelper::parseLocation($nbt, $world), $nbt);
-		}, ['Hologram']);
+		EntityFactory::getInstance()->register(Leaderboard::class, function(World $world, CompoundTag $nbt) : Leaderboard{
+			return new Leaderboard(EntityDataHelper::parseLocation($nbt, $world), $nbt);
+		}, ['Leaderboard']);
 
 		EntityFactory::getInstance()->register(NPC::class, function(World $world, CompoundTag $nbt) : NPC{
 			return new NPC(EntityDataHelper::parseLocation($nbt, $world), Human::parseSkinNBT($nbt), $nbt);

@@ -6,6 +6,7 @@ namespace nayuki;
 
 use nayuki\entities\FishingHook;
 use nayuki\player\scoreboard\Scoreboard;
+use pocketmine\block\BlockTypeIds;
 use pocketmine\block\Froglight;
 use pocketmine\block\utils\FroglightType;
 use pocketmine\entity\animation\ArmSwingAnimation;
@@ -35,9 +36,7 @@ use pocketmine\item\ItemTypeIds;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\NetworkBroadcastUtils;
 use pocketmine\network\mcpe\protocol\AnimatePacket;
-use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
 use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
-use pocketmine\network\mcpe\protocol\types\inventory\UseItemOnEntityTransactionData;
 use pocketmine\network\mcpe\protocol\types\LevelSoundEvent;
 use pocketmine\network\mcpe\raklib\RakLibInterface;
 use pocketmine\network\query\DedicatedQueryNetworkInterface;
@@ -61,7 +60,6 @@ final readonly class Listener implements PMListener{
 		$this->main->getPlayerHandler()->loadPlayerData($player);
 
 		Server::getInstance()->broadcastMessage(TextFormat::WHITE . "[" . TextFormat::GREEN . "+" . TextFormat::WHITE . "] " . TextFormat::AQUA . $player->getName());
-		Scoreboard::spawn($player);
 		Utils::playSound('random.levelup', $player);
 	}
 
@@ -97,7 +95,7 @@ final readonly class Listener implements PMListener{
 		$player = $event->getOrigin()->getPlayer();
 		$packet = $event->getPacket();
 		if($player instanceof Player){
-			if(($packet instanceof InventoryTransactionPacket && $packet->trData instanceof UseItemOnEntityTransactionData) || ($packet instanceof LevelSoundEventPacket && ($packet->sound === LevelSoundEvent::ATTACK_NODAMAGE || $packet->sound === LevelSoundEvent::ATTACK_STRONG))){
+			if(($packet instanceof LevelSoundEventPacket && ($packet->sound === LevelSoundEvent::ATTACK_NODAMAGE || $packet->sound === LevelSoundEvent::ATTACK_STRONG))){
 				$this->main->getClickHandler()->addClick($player);
 				$player->broadcastAnimation(new ArmSwingAnimation($player));
 			}elseif($packet instanceof AnimatePacket){
@@ -113,24 +111,35 @@ final readonly class Listener implements PMListener{
 	public function onPlayerDeathEvent(PlayerDeathEvent $event) : void{
 		$player = $event->getPlayer();
 		$cause = $player->getLastDamageCause();
+
 		$event->setDrops([]);
+		$event->setXpDropAmount(0);
+		$event->setDeathMessage("");
 
-		if($cause instanceof EntityDamageByEntityEvent){
+		$this->main->getPlayerHandler()->handlePlayerDeath($player);
+
+		/** @var EntityDamageByEntityEvent $cause */
+		if($cause->getCause() === EntityDamageEvent::CAUSE_ENTITY_ATTACK){
 			$killer = $cause->getDamager();
-			if($killer instanceof Player && $killer->getId() !== $player->getId()){
-				$killerSession = $this->main->getSessionManager()->getSession($killer);
-				$killerSession->incrementKills();
-				$killerSession->addCoins(10);
-
-				$playerSession = $this->main->getSessionManager()->getSession($player);
-				$playerSession->incrementDeaths();
-
-				Scoreboard::inArena($killer);
-				$killer->sendMessage(TextFormat::GREEN . "You killed " . TextFormat::AQUA . $player->getName());
+			if(!($killer instanceof Player)){
+				return;
 			}
-		}
 
-		Scoreboard::spawn($player);
+			if($killer->getId() === $player->getId()){
+				return;
+			}
+
+			$killerSession = $this->main->getSessionManager()->getSession($killer);
+			$killerSession->incrementKills();
+			$killerSession->addCoins(10);
+
+			Scoreboard::inArena($killer);
+			$this->main->getServer()->broadcastMessage(
+				TextFormat::GREEN . $killer->getName() .
+				TextFormat::WHITE . " killed " .
+				TextFormat::AQUA . $player->getName()
+			);
+		}
 	}
 
 	/**
@@ -190,7 +199,6 @@ final readonly class Listener implements PMListener{
 			$this->spawnFishingHook($player);
 		}else{
 			$session->getCurrentKit()?->handleItemSkill($player, $item);
-			$player->broadcastAnimation(new ArmSwingAnimation($player));
 		}
 	}
 
@@ -220,55 +228,70 @@ final readonly class Listener implements PMListener{
 	 */
 	public function onDamageEvent(EntityDamageEvent $event) : void{
 		$cause = $event->getCause();
-
 		if($cause === EntityDamageEvent::CAUSE_FALL){
 			$event->cancel();
-		}elseif($event instanceof EntityDamageByEntityEvent){
-			$damager = $event->getDamager();
-			$entity = $event->getEntity();
-
-			if(!($damager instanceof Player) || !($entity instanceof Player)){
-				return;
-			}
-
-			if($entity->getHealth() - $event->getFinalDamage() > 0){
-				return;
-			}
-
-			$event->cancel();
-
-			$deathSession = $this->main->getSessionManager()->getSession($entity);
-			$killerSession = $this->main->getSessionManager()->getSession($damager);
-
-			$deathSession->incrementDeaths();
-			$killerSession->incrementKills();
-			$killerSession->addCoins(10);
-
-			$killerKit = $killerSession->getCurrentKit();
-			if($killerKit !== null){
-				$killerKit->setEffect($damager);
-				$damager->getInventory()->setContents($killerKit->getInventoryItems());
-				$damager->getArmorInventory()->setContents($killerKit->getArmorItems());
-			}
-
-			$killerStreak = $killerSession->getStreak();
-			if($killerStreak % 5 === 0){
-				$this->main->getServer()->broadcastMessage(TextFormat::AQUA . $damager->getName() . TextFormat::WHITE . " is on a " . TextFormat::GREEN . $killerStreak . TextFormat::WHITE . " kill streak!");
-			}
-
-			$this->main->getServer()->broadcastMessage(TextFormat::GREEN . $damager->getName() . TextFormat::WHITE . " killed " . TextFormat::AQUA . $entity->getName());
-
-			$entity->setHealth(20);
-			$entity->teleport(new Vector3($this->main::SPAWN_COORDS['x'], $this->main::SPAWN_COORDS['y'], $this->main::SPAWN_COORDS['z']));
-			$entity->getInventory()->clearAll();
-			$entity->getArmorInventory()->clearAll();
-			$entity->getEffects()->clear();
-			$entity->extinguish();
-			$entity->setFireTicks(0);
-
-			Scoreboard::spawn($entity);
-			Scoreboard::inArena($damager);
+			return;
 		}
+
+		if($cause !== EntityDamageEvent::CAUSE_ENTITY_ATTACK){
+			return;
+		}
+
+		/** @var EntityDamageByEntityEvent $event */
+
+		$killer = $event->getDamager();
+		$entity = $event->getEntity();
+
+		if(!($killer instanceof Player) || !($entity instanceof Player)){
+			return;
+		}
+
+		$deathSession = $this->main->getSessionManager()->getSession($entity);
+		$killerSession = $this->main->getSessionManager()->getSession($killer);
+
+		if($deathSession->getCurrentKit() === null && $killerSession->getCurrentKit() === null){
+			$event->cancel();
+			return;
+		}
+
+		$this->main->getPlayerHandler()->applyKnockBack($entity, $killer);
+
+		if($entity->getHealth() - $event->getFinalDamage() > 0){
+			return;
+		}
+
+		$this->main->getPlayerHandler()->handlePlayerDeath($entity);
+
+		$killerSession->incrementKills();
+		$killerSession->addCoins(mt_rand(10, 20)); // random coins 10 - 20
+
+		$killerKit = $killerSession->getCurrentKit();
+		if($killerKit !== null){
+			$killerKit->setEffect($killer);
+			$killer->getInventory()->setContents($killerKit->getInventoryItems());
+			$killer->getArmorInventory()->setContents($killerKit->getArmorItems());
+		}
+
+		$killerStreak = $killerSession->getStreak();
+		if($killerStreak % 5 === 0){
+			$this->main->getServer()->broadcastMessage(
+				TextFormat::AQUA . $killer->getName() .
+				TextFormat::WHITE . " is on a " .
+				TextFormat::GREEN . $killerStreak .
+				TextFormat::WHITE . " kill streak!"
+			);
+		}
+
+		$this->main->getServer()->broadcastMessage(
+			TextFormat::GREEN . $killer->getName() .
+			TextFormat::WHITE . " killed " .
+			TextFormat::AQUA . $entity->getName()
+		);
+
+		Scoreboard::inArena($killer);
+		Utils::playSound('game.player.hurt', $killer);
+
+		$event->cancel();
 	}
 
 	/**
@@ -312,8 +335,10 @@ final readonly class Listener implements PMListener{
 	public function onPlayerChat(PlayerChatEvent $event) : void{
 		$player = $event->getPlayer();
 		$msg = $event->getMessage();
-		$this->main->getServer()->broadcastMessage(TextFormat::GRAY . "{$player->getName()} ≫" . TextFormat::WHITE . " $msg");
+
 		$event->cancel();
+
+		$this->main->getServer()->broadcastMessage(TextFormat::GRAY . "{$player->getName()} ≫" . TextFormat::WHITE . " $msg");
 	}
 
 	/**
@@ -329,7 +354,12 @@ final readonly class Listener implements PMListener{
 		$positionBelow = $player->getPosition()->floor()->subtract(0, 1, 0);
 		$belowBlock = $player->getWorld()->getBlock($positionBelow);
 
-		if($belowBlock instanceof Froglight && $belowBlock->getFroglightType() === FroglightType::VERDANT){
+		if($belowBlock->getTypeId() !== BlockTypeIds::FROGLIGHT){
+			return;
+		}
+
+		/** @var Froglight $belowBlock */
+		if($belowBlock->getFroglightType() === FroglightType::VERDANT){
 			$dVector = $player->getDirectionVector();
 			$player->setMotion(new Vector3($dVector->x * 2.35, 3.5, $dVector->y * 2.35));
 		}
