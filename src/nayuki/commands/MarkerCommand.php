@@ -6,9 +6,9 @@ namespace nayuki\commands;
 
 use nayuki\entities\Marker;
 use nayuki\Main;
-use nayuki\Utils;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
+use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use function count;
@@ -71,10 +71,8 @@ final class MarkerCommand extends Command{
 	}
 
 	private function spawn(Player $player, string $text) : void{
-		$nbt = Utils::createBaseNBT($player->getLocation(), null, $player->getLocation()->getYaw(), $player->getLocation()->getPitch());
 		$pos = $player->getLocation();
-		$nbt->setString('text', $text);
-		$entity = new Marker($pos, $nbt);
+		$entity = new Marker($pos, CompoundTag::create()->setString('text', $text));
 		$entity->spawnToAll();
 
 		$player->sendMessage(Main::PREFIX . TextFormat::GREEN . 'Marker spawned successfully! ID: ' . $entity->getId());
