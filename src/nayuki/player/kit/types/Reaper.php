@@ -33,7 +33,7 @@ final class Reaper extends BaseKit{
 	 */
 	public function getInventoryItems() : array{
 		return [
-			(new ReaperScythe())->addEnchantment(new EnchantmentInstance(VanillaEnchantments::SHARPNESS(), 3)),
+			(new ReaperScythe())->addEnchantment(new EnchantmentInstance(VanillaEnchantments::SHARPNESS(), 4)),
 		];
 	}
 

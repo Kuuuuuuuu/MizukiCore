@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace nayuki\player\kit\items;
 
+use nayuki\Utils;
 use pocketmine\entity\effect\EffectInstance;
 use pocketmine\entity\effect\VanillaEffects;
 use pocketmine\entity\Entity;
@@ -21,7 +22,7 @@ final class FreezerSword extends Sword{
 
 	public function onAttackEntity(Entity $victim, array &$returnedItems) : bool{
 		if($victim instanceof Player){
-			$victim->getEffects()->add(new EffectInstance(VanillaEffects::SLOWNESS(), 20 * 5, 1, false));
+			$victim->getEffects()->add(new EffectInstance(VanillaEffects::SLOWNESS(), Utils::secondsToTicks(5), 1, false));
 		}
 
 		return parent::onAttackEntity($victim, $returnedItems);

@@ -28,10 +28,10 @@ final class Stealth extends BaseKit{
 	 */
 	public function getArmorItems() : array{
 		return [
-			VanillaItems::LEATHER_CAP()->setUnbreakable(),
+			VanillaItems::AIR(),
 			VanillaItems::IRON_CHESTPLATE()->setUnbreakable(),
-			VanillaItems::LEATHER_PANTS()->setUnbreakable(),
-			VanillaItems::LEATHER_BOOTS()->setUnbreakable(),
+			VanillaItems::AIR(),
+			VanillaItems::CHAINMAIL_BOOTS()->setUnbreakable(),
 		];
 	}
 
@@ -80,6 +80,6 @@ final class Stealth extends BaseKit{
 			}
 		}, Utils::secondsToTicks(5));
 
-		$itemOnHand->setCount($itemOnHand->getCount() - 1);
+		$player->getInventory()->removeItem($itemOnHand);
 	}
 }

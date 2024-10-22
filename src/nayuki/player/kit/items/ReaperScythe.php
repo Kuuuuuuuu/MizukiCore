@@ -22,7 +22,7 @@ final class ReaperScythe extends Item{
 	public function onAttackEntity(Entity $victim, array &$returnedItems) : bool{
 		if($victim instanceof Player){
 			$victim->getEffects()->add(new EffectInstance(VanillaEffects::SLOWNESS(), Utils::secondsToTicks(3), 1, false));
-			$victim->getEffects()->add(new EffectInstance(VanillaEffects::WITHER(), Utils::secondsToTicks(3), 1, false));
+			$victim->getEffects()->add(new EffectInstance(VanillaEffects::WITHER(), Utils::secondsToTicks(3), 2, false));
 			$victim->getEffects()->add(new EffectInstance(VanillaEffects::WEAKNESS(), Utils::secondsToTicks(3), 1, false));
 		}
 

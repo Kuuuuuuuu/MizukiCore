@@ -21,8 +21,8 @@ final class Fisherman extends BaseKit{
 		return [
 			VanillaItems::IRON_HELMET()->setUnbreakable(),
 			VanillaItems::IRON_CHESTPLATE()->setUnbreakable(),
-			VanillaItems::IRON_LEGGINGS()->setUnbreakable(),
-			VanillaItems::IRON_BOOTS()->setUnbreakable()
+			VanillaItems::LEATHER_PANTS()->setUnbreakable(),
+			VanillaItems::LEATHER_BOOTS()->setUnbreakable()
 		];
 	}
 
@@ -31,7 +31,7 @@ final class Fisherman extends BaseKit{
 	 */
 	public function getInventoryItems() : array{
 		return [
-			VanillaItems::DIAMOND_SWORD()->setUnbreakable(),
+			VanillaItems::IRON_SWORD()->setUnbreakable(),
 			VanillaItems::FISHING_ROD()->setUnbreakable()->addEnchantment(new EnchantmentInstance(VanillaEnchantments::UNBREAKING(), 5)),
 		];
 	}

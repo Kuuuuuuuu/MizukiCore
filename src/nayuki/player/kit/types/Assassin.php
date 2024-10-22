@@ -34,7 +34,6 @@ final class Assassin extends BaseKit{
 	public function getInventoryItems() : array{
 		return [
 			VanillaItems::DIAMOND_SWORD()->setUnbreakable(),
-			VanillaItems::GOLDEN_SWORD()->addEnchantment(new EnchantmentInstance(VanillaEnchantments::SHARPNESS(), 32767))->setDamage(VanillaItems::GOLDEN_SWORD()->getMaxDurability() - 1),
 		];
 	}
 
