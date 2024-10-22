@@ -3,7 +3,7 @@ main: nayuki\Main
 version: 1.0.0
 api: 5.0.0
 permissions:
-  hologram.command:
+  leaderboard.command:
     default: op
   npc.command:
     default: op
