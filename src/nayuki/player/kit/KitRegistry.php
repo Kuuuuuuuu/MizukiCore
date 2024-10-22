@@ -5,19 +5,20 @@ declare(strict_types=1);
 namespace nayuki\player\kit;
 
 use InvalidArgumentException;
-use nayuki\player\kit\types\Pusher;
-use nayuki\player\kit\types\Reaper;
-use nayuki\player\kit\types\Samurai;
-use nayuki\player\kit\types\Stealth;
 use nayuki\player\kit\types\Assassin;
 use nayuki\player\kit\types\Berserker;
 use nayuki\player\kit\types\Bomber;
 use nayuki\player\kit\types\Fisherman;
 use nayuki\player\kit\types\Freezer;
+use nayuki\player\kit\types\Lobby;
 use nayuki\player\kit\types\Mage;
 use nayuki\player\kit\types\Priest;
+use nayuki\player\kit\types\Pusher;
 use nayuki\player\kit\types\Pyro;
 use nayuki\player\kit\types\Ranger;
+use nayuki\player\kit\types\Reaper;
+use nayuki\player\kit\types\Samurai;
+use nayuki\player\kit\types\Stealth;
 use nayuki\player\kit\types\Tank;
 use nayuki\player\kit\types\Warrior;
 use pocketmine\utils\RegistryTrait;
@@ -53,6 +54,7 @@ final class KitRegistry{
 		self::register(new Reaper('Reaper'));
 		self::register(new Samurai('Samurai'));
 		self::register(new Stealth('Stealth'));
+		self::register(new Lobby('Lobby'));
 	}
 
 	/**
