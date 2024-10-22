@@ -55,7 +55,7 @@ final class Session{
 	}
 
 	public function getKdr() : float{
-		return $this->deaths > 0 ? $this->kills / $this->deaths : 1.0;
+		return $this->deaths > 0 ? round($this->kills / $this->deaths, 2) : 1.0;
 	}
 
 	public function getCoins() : int{
