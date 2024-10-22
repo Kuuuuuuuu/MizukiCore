@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace nayuki\commands;
 
-use nayuki\entities\Hologram;
+use nayuki\entities\Leaderboard;
 use nayuki\Main;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
@@ -13,14 +13,15 @@ use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use function in_array;
 
-final class HologramCommand extends Command{
+final class LeaderboardCommand extends Command{
 	public function __construct(){
 		parent::__construct(
-			'hologram',
-			'Hologram Command',
-			'/hologram help'
+			'leaderboard',
+			'Leaderboard Command',
+			'/leaderboard help',
+			['lb']
 		);
-		$this->setPermission('hologram.command');
+		$this->setPermission('leaderboard.command');
 	}
 
 	public function execute(CommandSender $sender, string $commandLabel, array $args) : void{
@@ -37,37 +38,37 @@ final class HologramCommand extends Command{
 			switch(strtolower($args[0])){
 				case 'spawn':
 					if(!isset($args[1])){
-						$sender->sendMessage(Main::PREFIX . TextFormat::RED . 'Usage: /hologram spawn <type>');
+						$sender->sendMessage(Main::PREFIX . TextFormat::RED . 'Usage: /leaderboard spawn <type>');
 						return;
 					}
 					if(in_array($args[1], ['kills', 'deaths'], true)){
 						$this->spawn($sender, $args[1]);
 						return;
 					}
-					$sender->sendMessage(Main::PREFIX . TextFormat::RED . 'Usage: /hologram spawn <kills|deaths>');
+					$sender->sendMessage(Main::PREFIX . TextFormat::RED . 'Usage: /leaderboard spawn <kills|deaths>');
 					break;
 				case 'remove-all':
 					foreach($sender->getWorld()->getEntities() as $entity){
-						if($entity instanceof Hologram){
+						if($entity instanceof Leaderboard){
 							$entity->flagForDespawn();
 						}
 					}
 					break;
 				case 'help':
-					$sender->sendMessage('/hologram spawn <kills|deaths> | /hologram remove-all');
+					$sender->sendMessage('/leaderboard spawn <kills|deaths> | /leaderboard remove-all');
 					break;
 				default:
-					$sender->sendMessage(Main::PREFIX . TextFormat::RED . "Subcommand '$args[0]' not found! Try '/hologram help' for help.");
+					$sender->sendMessage(Main::PREFIX . TextFormat::RED . "Subcommand '$args[0]' not found! Try '/leaderboard help' for help.");
 					break;
 			}
 		}
 	}
 
 	public function spawn(Player $player, string $type) : void{
-		$entity = new Hologram($player->getLocation(), CompoundTag::create()->setString('type', $type));
+		$entity = new Leaderboard($player->getLocation(), CompoundTag::create()->setString('type', $type));
 		$entity->setNameTagAlwaysVisible();
 		$entity->spawnToAll();
 
-		$player->sendMessage(Main::PREFIX . TextFormat::GREEN . 'Hologram' . ' created successfully! ID: ' . $entity->getId());
+		$player->sendMessage(Main::PREFIX . TextFormat::GREEN . 'Leaderboard' . ' created successfully! ID: ' . $entity->getId());
 	}
 }
