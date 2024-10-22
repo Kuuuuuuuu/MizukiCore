@@ -6,6 +6,7 @@ namespace nayuki\player;
 
 use nayuki\entities\FishingHook;
 use nayuki\Main;
+use nayuki\player\kit\KitRegistry;
 use nayuki\player\scoreboard\Scoreboard;
 use nayuki\tasks\async\AsyncLoadPlayerData;
 use nayuki\tasks\async\AsyncSavePlayerData;
@@ -49,19 +50,33 @@ final readonly class PlayerHandler{
 		// Reset player
 		$player->setHealth(20);
 		$player->teleport(new Vector3(
-			$this->main::SPAWN_COORDS['x'],
-			$this->main::SPAWN_COORDS['y'],
-			$this->main::SPAWN_COORDS['z']
+			$this->main::LOBBY_COORDS['x'],
+			$this->main::LOBBY_COORDS['y'],
+			$this->main::LOBBY_COORDS['z']
 		));
 
 		Scoreboard::spawn($player);
 		Utils::playSound('game.player.die', $player);
 
+		$this->giveLobbyItems($player);
+		$player->getEffects()->clear();
+		$player->extinguish();
+	}
+
+	public function giveLobbyItems(Player $player) : void{
+		$kit = KitRegistry::fromString('lobby');
+
+		if($kit === false){
+			return;
+		}
+
+		$sessions = $this->main->getSessionManager()->getSession($player);
+		$sessions->setCurrentKit($kit);
+
 		$player->getInventory()->clearAll();
 		$player->getArmorInventory()->clearAll();
 		$player->getCursorInventory()->clearAll();
-		$player->getEffects()->clear();
-		$player->extinguish();
+		$player->getInventory()->setContents($kit->getInventoryItems());
 	}
 
 	public function applyKnockBack(Player $player, Player $damager) : void{
