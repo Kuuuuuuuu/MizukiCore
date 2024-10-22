@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace nayuki\player\session;
 
 use nayuki\entities\FishingHook;
+use nayuki\Main;
 use nayuki\player\kit\BaseKit;
 use pocketmine\player\Player;
+use pocketmine\utils\TextFormat;
 
 final class Session{
 	private int $kills = 0;
@@ -108,5 +110,10 @@ final class Session{
 	public function incrementDeaths() : void{
 		$this->deaths++;
 		$this->killStreak = 0;
+	}
+
+	public function update() : void{
+		$cps = Main::getInstance()->getClickHandler()->getClicks($this->player);
+		$this->player->setScoreTag(TextFormat::RED . $this->player->getHealth() . TextFormat::WHITE . " | " . TextFormat::AQUA . "CPS" . TextFormat::WHITE . ": " . $cps);
 	}
 }
