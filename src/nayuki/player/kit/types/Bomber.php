@@ -38,7 +38,7 @@ final class Bomber extends BaseKit{
 	public function getInventoryItems() : array{
 		return [
 			VanillaItems::IRON_SWORD()->setUnbreakable(false),
-			VanillaBlocks::TNT()->asItem()->setCount(16)->setCustomName(TextFormat::RESET . TextFormat::RED . "Bomber TNT" . TextFormat::RESET . TextFormat::WHITE . " (กดวางที่พื้นเพื่อใช้งาน)"),
+			VanillaBlocks::TNT()->asItem()->setCount(8)->setCustomName(TextFormat::RESET . TextFormat::RED . "Bomber TNT" . TextFormat::RESET . TextFormat::WHITE . " (กดวางที่พื้นเพื่อใช้งาน)"),
 		];
 	}
 
