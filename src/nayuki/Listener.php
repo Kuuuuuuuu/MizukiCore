@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace nayuki;
 
 use nayuki\entities\FishingHook;
+use nayuki\player\kit\types\Lobby;
 use nayuki\player\scoreboard\Scoreboard;
 use pocketmine\block\BlockTypeIds;
 use pocketmine\block\Froglight;
@@ -58,6 +59,16 @@ final readonly class Listener implements PMListener{
 		$event->setJoinMessage("");
 
 		$this->main->getPlayerHandler()->loadPlayerData($player);
+		$this->main->getPlayerHandler()->giveLobbyItems($player);
+
+		$lobby = new Vector3(
+			$this->main::LOBBY_COORDS['x'],
+			$this->main::LOBBY_COORDS['y'],
+			$this->main::LOBBY_COORDS['z']
+		);
+
+		$player->setSpawn($lobby);
+		$player->teleport($lobby);
 
 		Server::getInstance()->broadcastMessage(TextFormat::WHITE . "[" . TextFormat::GREEN . "+" . TextFormat::WHITE . "] " . TextFormat::AQUA . $player->getName());
 		Utils::playSound('random.levelup', $player);
@@ -67,8 +78,9 @@ final readonly class Listener implements PMListener{
 	 * @priority HIGHEST
 	 */
 	public function onQuit(PlayerQuitEvent $event) : void{
-		$player = $event->getPlayer();
 		$event->setQuitMessage("");
+
+		$player = $event->getPlayer();
 
 		Server::getInstance()->broadcastMessage(TextFormat::WHITE . "[" . TextFormat::RED . "-" . TextFormat::WHITE . "] " . TextFormat::AQUA . $player->getName());
 
@@ -147,7 +159,7 @@ final readonly class Listener implements PMListener{
 	 */
 	public function onPlayerRespawnEvent(PlayerRespawnEvent $event) : void{
 		$player = $event->getPlayer();
-		$spawnCoords = $this->main::SPAWN_COORDS;
+		$spawnCoords = $this->main::LOBBY_COORDS;
 		$player->teleport(new Vector3($spawnCoords['x'], $spawnCoords['y'], $spawnCoords['z']));
 
 		Scoreboard::spawn($player);
@@ -249,7 +261,7 @@ final readonly class Listener implements PMListener{
 		$deathSession = $this->main->getSessionManager()->getSession($entity);
 		$killerSession = $this->main->getSessionManager()->getSession($killer);
 
-		if($deathSession->getCurrentKit() === null && $killerSession->getCurrentKit() === null){
+		if($deathSession->getCurrentKit() instanceof Lobby && $killerSession->getCurrentKit() instanceof Lobby){
 			$event->cancel();
 			return;
 		}
