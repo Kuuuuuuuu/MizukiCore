@@ -10,7 +10,6 @@ use nayuki\player\scoreboard\Scoreboard;
 use pocketmine\block\BlockTypeIds;
 use pocketmine\block\Froglight;
 use pocketmine\block\utils\FroglightType;
-use pocketmine\entity\animation\ArmSwingAnimation;
 use pocketmine\entity\Location;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockBurnEvent;
@@ -35,10 +34,10 @@ use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\event\server\NetworkInterfaceRegisterEvent;
 use pocketmine\item\ItemTypeIds;
 use pocketmine\math\Vector3;
-use pocketmine\network\mcpe\NetworkBroadcastUtils;
-use pocketmine\network\mcpe\protocol\AnimatePacket;
-use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
-use pocketmine\network\mcpe\protocol\types\LevelSoundEvent;
+use pocketmine\network\mcpe\protocol\InventoryTransactionPacket;
+use pocketmine\network\mcpe\protocol\PlayerAuthInputPacket;
+use pocketmine\network\mcpe\protocol\types\inventory\UseItemOnEntityTransactionData;
+use pocketmine\network\mcpe\protocol\types\PlayerAuthInputFlags;
 use pocketmine\network\mcpe\raklib\RakLibInterface;
 use pocketmine\network\query\DedicatedQueryNetworkInterface;
 use pocketmine\player\Player;
@@ -106,14 +105,15 @@ final readonly class Listener implements PMListener{
 	public function onDataPacketReceiveEvent(DataPacketReceiveEvent $event) : void{
 		$player = $event->getOrigin()->getPlayer();
 		$packet = $event->getPacket();
-		if($player instanceof Player){
-			if(($packet instanceof LevelSoundEventPacket && ($packet->sound === LevelSoundEvent::ATTACK_NODAMAGE || $packet->sound === LevelSoundEvent::ATTACK_STRONG))){
-				$this->main->getClickHandler()->addClick($player);
-				$player->broadcastAnimation(new ArmSwingAnimation($player));
-			}elseif($packet instanceof AnimatePacket){
-				NetworkBroadcastUtils::broadcastPackets($player->getViewers(), [$packet]);
-				$event->cancel();
-			}
+		if(!($player instanceof Player)){
+			return;
+		}
+
+		if(
+			($packet instanceof PlayerAuthInputPacket && $packet->hasFlag(PlayerAuthInputFlags::MISSED_SWING)) ||
+			($packet instanceof InventoryTransactionPacket && $packet->trData instanceof UseItemOnEntityTransactionData)
+		){
+			$this->main->getClickHandler()->addClick($player);
 		}
 	}
 
@@ -373,7 +373,7 @@ final readonly class Listener implements PMListener{
 		/** @var Froglight $belowBlock */
 		if($belowBlock->getFroglightType() === FroglightType::VERDANT){
 			$dVector = $player->getDirectionVector();
-			$player->setMotion(new Vector3($dVector->x * 2.35, 3.5, $dVector->y * 2.35));
+			$player->setMotion(new Vector3($dVector->x * 2.35, 2.5, $dVector->y * 2.35));
 		}
 	}
 

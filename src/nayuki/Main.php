@@ -23,10 +23,13 @@ use pocketmine\entity\Human;
 use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\plugin\PluginBase;
+use pocketmine\utils\SingletonTrait;
 use pocketmine\utils\TextFormat;
 use pocketmine\world\World;
 
 final class Main extends PluginBase{
+	use SingletonTrait;
+
 	public const PREFIX = TextFormat::DARK_GRAY . "[" . TextFormat::AQUA . "MizukiCore" . TextFormat::DARK_GRAY . "] " . TextFormat::RESET;
 	public const LOBBY_COORDS = [
 		"x" => 13,
@@ -46,8 +49,12 @@ final class Main extends PluginBase{
 		"-23:7:30",
 		"-55:6:9"
 	];
+	public const GOLDEN_APPLE_DROP_COORDS = [
+		"12:6:86",
+		"108:4:-131",
+		"-122:17:79"
+	];
 
-	private static Main $instance;
 	private SessionManager $sessionManager;
 	private ClickHandler $clickHandler;
 	private PlayerHandler $playerHandler;
@@ -64,16 +71,13 @@ final class Main extends PluginBase{
 		return $this->playerHandler;
 	}
 
-	public static function getInstance() : Main{
-		return self::$instance;
-	}
 
 	public static function getPlayerDataPath() : string{
 		return self::getInstance()->getDataFolder() . 'player/';
 	}
 
 	public function onLoad() : void{
-		self::$instance = $this;
+		self::setInstance($this);
 		$this->sessionManager = new SessionManager();
 		$this->clickHandler = new ClickHandler($this);
 		$this->playerHandler = new PlayerHandler($this);
@@ -106,6 +110,8 @@ final class Main extends PluginBase{
 		}
 
 		foreach($this->getServer()->getWorldManager()->getWorlds() as $world){
+			$world->save(true);
+
 			foreach($world->getEntities() as $entity){
 				if($entity instanceof Hologram || $entity instanceof NPC){
 					return;

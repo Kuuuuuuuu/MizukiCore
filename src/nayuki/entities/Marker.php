@@ -28,7 +28,7 @@ final class Marker extends Hologram{
 			$location = $this->getLocation();
 			$world = $location->getWorld();
 
-			for($i = 0; $i < 360; $i += 10){
+			for($i = 0; $i < 360; $i += 30){
 				$rad = deg2rad($i);
 				$x = $location->x + 1.5 * cos($rad);
 				$y = $location->y + 1.5;
