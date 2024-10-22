@@ -2,6 +2,9 @@ name: MizukiCore
 main: nayuki\Main
 version: 1.0.0
 api: 5.0.0
+author: Nayuki
+website: https://nayuki.cyou
+load: POSTWORLD
 permissions:
   leaderboard.command:
     default: op
