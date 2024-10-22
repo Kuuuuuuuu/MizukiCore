@@ -21,10 +21,10 @@ final class Tank extends BaseKit{
 	 */
 	public function getArmorItems() : array{
 		return [
-			VanillaItems::DIAMOND_HELMET()->setUnbreakable(false),
+			VanillaItems::IRON_HELMET()->setUnbreakable(false),
 			VanillaItems::DIAMOND_CHESTPLATE()->setUnbreakable(false),
 			VanillaItems::DIAMOND_LEGGINGS()->setUnbreakable(false),
-			VanillaItems::DIAMOND_BOOTS()->setUnbreakable(false)
+			VanillaItems::IRON_BOOTS()->setUnbreakable(false)
 		];
 	}
 
@@ -33,7 +33,7 @@ final class Tank extends BaseKit{
 	 */
 	public function getInventoryItems() : array{
 		return [
-			VanillaItems::IRON_SWORD()->setUnbreakable(false)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::UNBREAKING(), 1)),
+			VanillaItems::DIAMOND_AXE()->setUnbreakable(false)->addEnchantment(new EnchantmentInstance(VanillaEnchantments::UNBREAKING(), 1)),
 		];
 	}
 
