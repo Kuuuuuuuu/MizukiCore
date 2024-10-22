@@ -6,6 +6,7 @@ namespace nayuki\tasks\async;
 
 use Exception;
 use nayuki\Main;
+use nayuki\player\scoreboard\Scoreboard;
 use pocketmine\player\Player;
 use pocketmine\scheduler\AsyncTask;
 use function yaml_emit_file;
@@ -76,6 +77,7 @@ final class AsyncLoadPlayerData extends AsyncTask{
 
 		// @phpstan-ignore-next-line
 		$session->loadData($result['data']);
+		Scoreboard::spawn($player);
 
 		$player->sendMessage(Main::PREFIX . 'Your data has been loaded.');
 	}
