@@ -284,6 +284,8 @@ final readonly class Listener implements PMListener{
 			$killer->getArmorInventory()->setContents($killerKit->getArmorItems());
 		}
 
+		$killer->setHealth(20);
+
 		$killerStreak = $killerSession->getStreak();
 		if($killerStreak % 5 === 0){
 			$this->main->getServer()->broadcastMessage(
