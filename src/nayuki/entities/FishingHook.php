@@ -21,8 +21,8 @@ use pocketmine\utils\Random;
 
 final class FishingHook extends Projectile{
 
-	private const GRAVITY = 0.05;
-	private const DRAG = 0.04;
+	private const GRAVITY = 0.1;
+	private const DRAG = 0.00;
 	private const MOTION_MULTIPLIER = 0.35;
 
 	public static function getNetworkTypeId() : string{
@@ -122,7 +122,7 @@ final class FishingHook extends Projectile{
 			$random->nextSignedFloat() * $randomness * $hFactor
 		));
 
-		$this->motion = $this->motion->multiply(1.5 - $iFactor)->addVector((new Vector3(
+		$this->motion = $this->motion->multiply(2 - $iFactor)->addVector((new Vector3(
 			$randomized->x * $hFactor,
 			$randomized->y + 2.835,
 			$randomized->z * $hFactor
