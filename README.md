@@ -1,5 +1,10 @@
 # MizukiCore
 
-MizukiCore is a plugin that for small KitPvP servers!
+### ⚠️ **Project Status**: In Development
 
-## Still in development
+**MizukiCore** is a custom plugin that designed for small KitPvP servers!
+
+## Todo List
+
+- [ ] Add more kits, skills, etc.
+- [ ] Clean up code
