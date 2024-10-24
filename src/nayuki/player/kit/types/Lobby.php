@@ -17,7 +17,7 @@ use pocketmine\utils\TextFormat;
 
 final class Lobby extends BaseKit{
 
-	private static string $settingsItemName = TextFormat::RESET . TextFormat::AQUA . "Settings" . TextFormat::RESET . TextFormat::WHITE . " (กดค้างเพื่อเปิดเมนู)";
+	private static string $settingsItemName = TextFormat::RESET . TextFormat::AQUA . 'Settings' . TextFormat::RESET . TextFormat::WHITE . ' (กดค้างเพื่อเปิดเมนู)';
 
 	/**
 	 * @return Item[]
@@ -81,9 +81,9 @@ final class Lobby extends BaseKit{
 			}
 		});
 
-		$form->setTitle(TextFormat::AQUA . "Settings");
-		$form->addToggle("CPS Counter", $session->isCpsCounterEnabled(), 'cps');
-		$form->addToggle("Scoreboard", $session->isScoreboardEnabled(), 'scoreboard');
+		$form->setTitle(TextFormat::AQUA . 'Settings');
+		$form->addToggle('CPS Counter', $session->isCpsCounterEnabled(), 'cps');
+		$form->addToggle('Scoreboard', $session->isScoreboardEnabled(), 'scoreboard');
 
 		$player->sendForm($form);
 	}

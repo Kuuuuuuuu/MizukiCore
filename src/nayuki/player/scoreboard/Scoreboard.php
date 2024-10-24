@@ -12,14 +12,14 @@ final class Scoreboard{
 	public static function spawn(Player $player) : void{
 		$session = Main::getInstance()->getSessionManager()->getSession($player);
 		$lines = [
-			"§fKills: §b" . $session->getKills(),
-			"§fDeaths: §b" . $session->getDeaths(),
-			"§fKDR: §b" . $session->getKdr(),
-			"§fCoins: §b" . $session->getCoins(),
-			"§f----------------"
+			'§fKills: §b' . $session->getKills(),
+			'§fDeaths: §b' . $session->getDeaths(),
+			'§fKDR: §b' . $session->getKdr(),
+			'§fCoins: §b' . $session->getCoins(),
+			'§f----------------'
 		];
 
-		ScoreboardUtils::new($player, TextFormat::WHITE . "----------------");
+		ScoreboardUtils::new($player, TextFormat::WHITE . '----------------');
 
 		foreach($lines as $index => $line){
 			ScoreboardUtils::setLine($player, $index, $line);
@@ -29,13 +29,13 @@ final class Scoreboard{
 	public static function inArena(Player $player) : void{
 		$session = Main::getInstance()->getSessionManager()->getSession($player);
 		$lines = [
-			"§fKills: §b" . $session->getKills(),
-			"§fDeaths: §b" . $session->getDeaths(),
-			"§fStreak: §b" . $session->getStreak(),
-			"§f----------------"
+			'§fKills: §b' . $session->getKills(),
+			'§fDeaths: §b' . $session->getDeaths(),
+			'§fStreak: §b' . $session->getStreak(),
+			'§f----------------'
 		];
 
-		ScoreboardUtils::new($player, TextFormat::WHITE . "----------------");
+		ScoreboardUtils::new($player, TextFormat::WHITE . '----------------');
 
 		foreach($lines as $index => $line){
 			ScoreboardUtils::setLine($player, $index, $line);

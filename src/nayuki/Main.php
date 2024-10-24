@@ -30,29 +30,29 @@ use pocketmine\world\World;
 final class Main extends PluginBase{
 	use SingletonTrait;
 
-	public const PREFIX = TextFormat::DARK_GRAY . "[" . TextFormat::AQUA . "MizukiCore" . TextFormat::DARK_GRAY . "] " . TextFormat::RESET;
+	public const PREFIX = TextFormat::DARK_GRAY . '[' . TextFormat::AQUA . 'MizukiCore' . TextFormat::DARK_GRAY . '] ' . TextFormat::RESET;
 	public const LOBBY_COORDS = [
-		"x" => 13,
-		"y" => 118,
-		"z" => 372,
+		'x' => 13,
+		'y' => 118,
+		'z' => 372,
 	];
 	public const ARENA_LOBBY_COORDS = [
-		"-46:32:-50",
-		"20:7:2",
-		"16:20:-22",
-		"21:19:85",
-		"44:37:-69",
-		"82:-13:1",
-		"-91:48:100",
-		"-95:7:-32",
-		"-117:17:-108",
-		"-23:7:30",
-		"-55:6:9"
+		'-46:32:-50',
+		'20:7:2',
+		'16:20:-22',
+		'21:19:85',
+		'44:37:-69',
+		'82:-13:1',
+		'-91:48:100',
+		'-95:7:-32',
+		'-117:17:-108',
+		'-23:7:30',
+		'-55:6:9'
 	];
 	public const GOLDEN_APPLE_DROP_COORDS = [
-		"12:6:86",
-		"108:4:-131",
-		"-122:17:79"
+		'12:6:86',
+		'108:4:-131',
+		'-122:17:79'
 	];
 
 	private SessionManager $sessionManager;
@@ -88,14 +88,14 @@ final class Main extends PluginBase{
 		@mkdir(self::getPlayerDataPath());
 
 		$this->getServer()->getPluginManager()->registerEvents(new Listener($this), $this);
-		$this->getLogger()->info(TextFormat::DARK_GREEN . "enabled!");
+		$this->getLogger()->info(TextFormat::DARK_GREEN . 'enabled!');
 
 		new MainTask($this, 1);
 
 		$this->loadWorlds();
 		$this->registerEntities();
 
-		$this->getServer()->getCommandMap()->registerAll("mizuki", [
+		$this->getServer()->getCommandMap()->registerAll('mizuki', [
 			new LeaderboardCommand(),
 			new NPCCommand($this),
 			new MarkerCommand($this)
@@ -103,10 +103,10 @@ final class Main extends PluginBase{
 	}
 
 	public function onDisable() : void{
-		$this->getLogger()->info(TextFormat::DARK_RED . "disabled!");
+		$this->getLogger()->info(TextFormat::DARK_RED . 'disabled!');
 
 		foreach($this->getServer()->getOnlinePlayers() as $player){
-			$player->kick(TextFormat::RED . "Server is restarting...");
+			$player->kick(TextFormat::RED . 'Server is restarting...');
 		}
 
 		foreach($this->getServer()->getWorldManager()->getWorlds() as $world){

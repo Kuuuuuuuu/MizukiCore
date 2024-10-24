@@ -38,7 +38,7 @@ final class NPC extends Human{
 		$this->setNoClientPredictions();
 		$this->getInventory()->setContents($kit->getInventoryItems());
 		$this->getArmorInventory()->setContents($kit->getArmorItems());
-		$this->setNameTag(TextFormat::AQUA . $kit->getName() . TextFormat::RESET . "\n" . TextFormat::GRAY . "Click to Select");
+		$this->setNameTag(TextFormat::AQUA . $kit->getName() . TextFormat::RESET . "\n" . TextFormat::GRAY . 'Click to Select');
 	}
 
 	public function saveNBT() : CompoundTag{

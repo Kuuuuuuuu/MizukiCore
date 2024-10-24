@@ -16,7 +16,7 @@ use pocketmine\utils\TextFormat;
 
 final class ReaperScythe extends Item{
 	public function __construct(){
-		parent::__construct(new ItemIdentifier(VanillaItems::NETHERITE_HOE()->getTypeId()), TextFormat::DARK_RED . "Reaper Scythe");
+		parent::__construct(new ItemIdentifier(VanillaItems::NETHERITE_HOE()->getTypeId()), TextFormat::DARK_RED . 'Reaper Scythe');
 	}
 
 	public function onAttackEntity(Entity $victim, array &$returnedItems) : bool{

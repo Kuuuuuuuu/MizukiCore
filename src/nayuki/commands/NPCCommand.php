@@ -71,7 +71,7 @@ final class NPCCommand extends Command{
 					$sender->sendMessage(Main::PREFIX . TextFormat::GREEN . 'NPCs: ' . count($entityNames) . "\n" . implode("\n", $entityNames));
 					break;
 				case 'help':
-					$sender->sendMessage("/npc spawn <kit> | /npc delete <id> | /npc list");
+					$sender->sendMessage('/npc spawn <kit> | /npc delete <id> | /npc list');
 					break;
 				default:
 					$sender->sendMessage(Main::PREFIX . TextFormat::RED . "Subcommand '$args[0]' not found! Try '/npc help' for help.");

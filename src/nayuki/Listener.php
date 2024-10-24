@@ -55,7 +55,8 @@ final readonly class Listener implements PMListener{
 	 */
 	public function onJoin(PlayerJoinEvent $event) : void{
 		$player = $event->getPlayer();
-		$event->setJoinMessage("");
+
+		$event->setJoinMessage(TextFormat::WHITE . '[' . TextFormat::GREEN . '+' . TextFormat::WHITE . '] ' . TextFormat::AQUA . $player->getName());
 
 		$this->main->getPlayerHandler()->loadPlayerData($player);
 		$this->main->getPlayerHandler()->giveLobbyItems($player);
@@ -69,7 +70,6 @@ final readonly class Listener implements PMListener{
 		$player->setSpawn($lobby);
 		$player->teleport($lobby);
 
-		Server::getInstance()->broadcastMessage(TextFormat::WHITE . "[" . TextFormat::GREEN . "+" . TextFormat::WHITE . "] " . TextFormat::AQUA . $player->getName());
 		Utils::playSound('random.levelup', $player);
 	}
 
@@ -77,11 +77,9 @@ final readonly class Listener implements PMListener{
 	 * @priority HIGHEST
 	 */
 	public function onQuit(PlayerQuitEvent $event) : void{
-		$event->setQuitMessage("");
-
 		$player = $event->getPlayer();
 
-		Server::getInstance()->broadcastMessage(TextFormat::WHITE . "[" . TextFormat::RED . "-" . TextFormat::WHITE . "] " . TextFormat::AQUA . $player->getName());
+		$event->setQuitMessage(TextFormat::WHITE . '[' . TextFormat::RED . '-' . TextFormat::WHITE . '] ' . TextFormat::AQUA . $player->getName());
 
 		$this->main->getClickHandler()->removePlayerClickData($player);
 		$this->main->getPlayerHandler()->savePlayerData($player);
@@ -126,7 +124,7 @@ final readonly class Listener implements PMListener{
 
 		$event->setDrops([]);
 		$event->setXpDropAmount(0);
-		$event->setDeathMessage("");
+		$event->setDeathMessage('');
 
 		$this->main->getPlayerHandler()->handlePlayerDeath($player);
 
@@ -148,7 +146,7 @@ final readonly class Listener implements PMListener{
 			Scoreboard::inArena($killer);
 			$this->main->getServer()->broadcastMessage(
 				TextFormat::GREEN . $killer->getName() .
-				TextFormat::WHITE . " killed " .
+				TextFormat::WHITE . ' killed ' .
 				TextFormat::AQUA . $player->getName()
 			);
 		}
@@ -290,15 +288,15 @@ final readonly class Listener implements PMListener{
 		if($killerStreak % 5 === 0){
 			$this->main->getServer()->broadcastMessage(
 				TextFormat::AQUA . $killer->getName() .
-				TextFormat::WHITE . " is on a " .
+				TextFormat::WHITE . ' is on a ' .
 				TextFormat::GREEN . $killerStreak .
-				TextFormat::WHITE . " kill streak!"
+				TextFormat::WHITE . ' kill streak!'
 			);
 		}
 
 		$this->main->getServer()->broadcastMessage(
 			TextFormat::GREEN . $killer->getName() .
-			TextFormat::WHITE . " killed " .
+			TextFormat::WHITE . ' killed ' .
 			TextFormat::AQUA . $entity->getName()
 		);
 
@@ -352,7 +350,7 @@ final readonly class Listener implements PMListener{
 
 		$event->cancel();
 
-		$this->main->getServer()->broadcastMessage(TextFormat::GRAY . "{$player->getName()} ≫" . TextFormat::WHITE . " $msg");
+		$this->main->getServer()->broadcastMessage(TextFormat::GRAY . "{$player->getName()} ≫ " . TextFormat::WHITE . $msg);
 	}
 
 	/**

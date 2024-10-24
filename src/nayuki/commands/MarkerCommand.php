@@ -61,7 +61,7 @@ final class MarkerCommand extends Command{
 					$sender->sendMessage(Main::PREFIX . TextFormat::GREEN . 'Markers: ' . count($entityNames) . "\n" . implode("\n", $entityNames));
 					break;
 				case 'help':
-					$sender->sendMessage("/marker spawn <kit> | /marker delete <id> | /marker list");
+					$sender->sendMessage('/marker spawn <kit> | /marker delete <id> | /marker list');
 					break;
 				default:
 					$sender->sendMessage(Main::PREFIX . TextFormat::RED . "Subcommand '$args[0]' not found! Try '/marker help' for help.");

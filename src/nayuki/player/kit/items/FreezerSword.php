@@ -17,7 +17,7 @@ use pocketmine\utils\TextFormat;
 
 final class FreezerSword extends Sword{
 	public function __construct(){
-		parent::__construct(new ItemIdentifier(VanillaItems::STONE_SWORD()->getTypeId()), TextFormat::AQUA . "Freezer Sword", ToolTier::STONE());
+		parent::__construct(new ItemIdentifier(VanillaItems::STONE_SWORD()->getTypeId()), TextFormat::AQUA . 'Freezer Sword', ToolTier::STONE());
 	}
 
 	public function onAttackEntity(Entity $victim, array &$returnedItems) : bool{

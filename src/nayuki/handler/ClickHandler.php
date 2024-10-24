@@ -23,7 +23,7 @@ final class ClickHandler{
 		$playerCps = $this->getClicks($player);
 
 		if($session->isCpsCounterEnabled()){
-			$player->sendTip(TextFormat::AQUA . "CPS: " . TextFormat::WHITE . $playerCps);
+			$player->sendTip(TextFormat::AQUA . 'CPS: ' . TextFormat::WHITE . $playerCps);
 		}
 
 		$clickData = $this->clickData[$player] ?? [];

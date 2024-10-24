@@ -20,7 +20,7 @@ use pocketmine\utils\TextFormat;
 
 final class Stealth extends BaseKit{
 
-	private static string $skillName = TextFormat::RESET . TextFormat::GREEN . "Invisible Gem" . TextFormat::RESET . TextFormat::WHITE . " (กดค้างเพื่อใช้งาน)";
+	private static string $skillName = TextFormat::RESET . TextFormat::GREEN . 'Invisible Gem' . TextFormat::RESET . TextFormat::WHITE . ' (กดค้างเพื่อใช้งาน)';
 	private float $invisibleTime = 0;
 
 	/**
@@ -60,7 +60,7 @@ final class Stealth extends BaseKit{
 		}
 
 		if(microtime(true) - $this->invisibleTime < 5){
-			$player->sendMessage(Main::PREFIX . TextFormat::RED . "กรุณารอสกิลนี้ใช้งานใหม่อีกครั้งในอีก " . (5 - round(microtime(true) - $this->invisibleTime, 1)) . " วินาที");
+			$player->sendMessage(Main::PREFIX . TextFormat::RED . 'กรุณารอสกิลนี้ใช้งานใหม่อีกครั้งในอีก ' . (5 - round(microtime(true) - $this->invisibleTime, 1)) . ' วินาที');
 			return;
 		}
 

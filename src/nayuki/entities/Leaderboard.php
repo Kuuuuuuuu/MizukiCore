@@ -37,7 +37,7 @@ final class Leaderboard extends Hologram{
 		}
 
 		$isKills = $this->type == 'kills';
-		$subtitle = TextFormat::AQUA . TextFormat::BOLD . ($isKills ? "Top Kills" : "Top Deaths") . "\n";
+		$subtitle = TextFormat::AQUA . TextFormat::BOLD . ($isKills ? 'Top Kills' : 'Top Deaths') . "\n";
 
 		$array = [];
 		foreach(Main::getInstance()->getSessionManager()->getSessions() as $session){

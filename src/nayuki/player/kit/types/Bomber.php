@@ -19,6 +19,7 @@ use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
 final class Bomber extends BaseKit{
+	private static string $skillItemName = TextFormat::RESET . TextFormat::RED . 'Bomber TNT' . TextFormat::RESET . TextFormat::WHITE . ' (กดวางที่พื้นเพื่อใช้งาน)';
 
 	/**
 	 * @return Item[]
@@ -38,7 +39,7 @@ final class Bomber extends BaseKit{
 	public function getInventoryItems() : array{
 		return [
 			VanillaItems::IRON_SWORD()->setUnbreakable(),
-			VanillaBlocks::TNT()->asItem()->setCount(8)->setCustomName(TextFormat::RESET . TextFormat::RED . "Bomber TNT" . TextFormat::RESET . TextFormat::WHITE . " (กดวางที่พื้นเพื่อใช้งาน)"),
+			VanillaBlocks::TNT()->asItem()->setCount(8)->setCustomName(self::$skillItemName),
 		];
 	}
 
@@ -47,7 +48,7 @@ final class Bomber extends BaseKit{
 	}
 
 	public function handleBlockSkill(Player $player, Block $blockAgainst, Item $itemOnHand) : void{
-		if($itemOnHand->getTypeId() !== VanillaBlocks::TNT()->asItem()->getTypeId() || $itemOnHand->getCustomName() !== TextFormat::RESET . TextFormat::RED . "Bomber TNT" . TextFormat::RESET . TextFormat::WHITE . " (กดวางที่พื้นเพื่อใช้งาน)"){
+		if($itemOnHand->getTypeId() !== VanillaBlocks::TNT()->asItem()->getTypeId() || $itemOnHand->getCustomName() !== self::$skillItemName){
 			return;
 		}
 

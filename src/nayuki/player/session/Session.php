@@ -114,6 +114,6 @@ final class Session{
 
 	public function update() : void{
 		$cps = Main::getInstance()->getClickHandler()->getClicks($this->player);
-		$this->player->setScoreTag(TextFormat::RED . $this->player->getHealth() . TextFormat::WHITE . " | " . TextFormat::AQUA . "CPS" . TextFormat::WHITE . ": " . $cps);
+		$this->player->setScoreTag(TextFormat::RED . $this->player->getHealth() . TextFormat::WHITE . ' | ' . TextFormat::AQUA . 'CPS' . TextFormat::WHITE . ': ' . $cps);
 	}
 }
