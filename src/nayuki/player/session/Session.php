@@ -20,6 +20,8 @@ final class Session{
 	private bool $cps = true;
 	private bool $initialized = false;
 	private ?FishingHook $isFishing = null;
+	/** @var array<string, float> */
+	private array $cooldowns = [];
 	public ?string $currentScoreboard = null;
 
 	public function __construct(private readonly Player $player){ }
@@ -76,6 +78,14 @@ final class Session{
 
 	public function setCurrentKit(?BaseKit $kit) : void{
 		$this->currentKit = $kit;
+	}
+
+	public function getCooldown(BaseKit $kit) : float{
+		return $this->cooldowns[spl_object_hash($kit)] ?? 0;
+	}
+
+	public function setCooldown(BaseKit $kit, float $cooldown) : void{
+		$this->cooldowns[spl_object_hash($kit)] = $cooldown;
 	}
 
 	public function isScoreboardEnabled() : bool{

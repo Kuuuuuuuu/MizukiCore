@@ -21,7 +21,7 @@ use pocketmine\utils\TextFormat;
 final class Stealth extends BaseKit{
 
 	private static string $skillName = TextFormat::RESET . TextFormat::GREEN . 'Invisible Gem' . TextFormat::RESET . TextFormat::WHITE . ' (กดค้างเพื่อใช้งาน)';
-	private float $invisibleTime = 0;
+	private static int $skillCooldown = 10;
 
 	/**
 	 * @return Item[]
@@ -59,14 +59,20 @@ final class Stealth extends BaseKit{
 			return;
 		}
 
-		if(microtime(true) - $this->invisibleTime < 5){
-			$player->sendMessage(Main::PREFIX . TextFormat::RED . 'กรุณารอสกิลนี้ใช้งานใหม่อีกครั้งในอีก ' . (5 - round(microtime(true) - $this->invisibleTime, 1)) . ' วินาที');
+		$session = Main::getInstance()->getSessionManager()->getSession($player);
+		$now = microtime(true);
+		$previousCooldown = $session->getCooldown($this);
+
+		if($now - $previousCooldown < self::$skillCooldown){
+			$remaining = self::$skillCooldown - round($now - $previousCooldown);
+			$player->sendMessage(Main::PREFIX . TextFormat::RED . "กรุณารอสกิลนี้ใช้งานใหม่อีกครั้งในอีก $remaining วินาที");
 			return;
 		}
 
-		$this->invisibleTime = microtime(true);
+		$session->setCooldown($this, $now);
 
-		foreach($player->getWorld()->getPlayers() as $players){
+		$world = $player->getWorld();
+		foreach($world->getPlayers() as $players){
 			$players->hidePlayer($player);
 		}
 
@@ -78,8 +84,9 @@ final class Stealth extends BaseKit{
 					$players->showPlayer($this->player);
 				}
 			}
-		}, Utils::secondsToTicks(5));
+		}, Utils::secondsToTicks(3));
 
-		$player->getInventory()->removeItem($itemOnHand);
+		$itemOnHand->setCount($itemOnHand->getCount() - 1);
+		$player->getInventory()->setItem($player->getInventory()->getHeldItemIndex(), $itemOnHand);
 	}
 }

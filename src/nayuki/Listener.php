@@ -74,10 +74,10 @@ final readonly class Listener implements PMListener{
 		$player->setSpawn($lobby);
 		$player->teleport($lobby);
 
-
 		$player->getNetworkSession()->sendDataPacket(
 			GameRulesChangedPacket::create([
-				"doImmediateRespawn" => new BoolGameRule(true, true)
+				"doImmediateRespawn" => new BoolGameRule(true, true),
+				"showCoordinates" => new BoolGameRule(true, true),
 			])
 		);
 
