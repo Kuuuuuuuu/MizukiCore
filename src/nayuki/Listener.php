@@ -137,11 +137,10 @@ final readonly class Listener implements PMListener{
 		$event->setXpDropAmount(0);
 		$event->setDeathMessage('');
 
-		if($cause->getCause() !== EntityDamageEvent::CAUSE_ENTITY_ATTACK){
+		if(!($cause instanceof EntityDamageByEntityEvent)){
 			return;
 		}
 
-		/** @var EntityDamageByEntityEvent $cause */
 		$killer = $cause->getDamager();
 		if(!($killer instanceof Player) || $killer->getId() === $player->getId()){
 			return;
