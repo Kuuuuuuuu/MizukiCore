@@ -24,7 +24,7 @@ final class BomberTNT extends PrimedTNT{
 	}
 
 	public function explode() : void{
-		$explosionSize = 7;
+		$explosionSize = 4;
 		$location = $this->getLocation();
 		$explosionBB = $this->calculateExplosionBoundingBox($location, $explosionSize);
 
@@ -70,7 +70,7 @@ final class BomberTNT extends PrimedTNT{
 			$damage = max(1, $damage); // Minimum damage
 
 			if($this->igniter !== null){
-				$ev = new EntityDamageByEntityEvent($this->igniter, $entity, EntityDamageEvent::CAUSE_ENTITY_EXPLOSION, $damage);
+				$ev = new EntityDamageByEntityEvent($this->igniter, $entity, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $damage);
 				$entity->attack($ev);
 			}
 
