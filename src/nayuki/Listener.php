@@ -296,6 +296,17 @@ final readonly class Listener implements PMListener{
 		if($event->getCause() === EntityDamageEvent::CAUSE_FALL){
 			$event->cancel();
 		}
+		if($event->getCause() === EntityDamageEvent::CAUSE_ENTITY_ATTACK){
+			/** @var EntityDamageByEntityEvent $event */
+			$damager = $event->getDamager();
+			$entity = $event->getEntity();
+
+			if(!($damager instanceof Player) || !($entity instanceof Player)){
+				return;
+			}
+
+			$this->main->getPlayerHandler()->applyKnockBack($entity, $damager);
+		}
 	}
 
 	/**
