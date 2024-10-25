@@ -51,13 +51,13 @@ final class AsyncLoadPlayerData extends AsyncTask{
 
 		try{
 			if(file_exists($this->path)){
-				$parsed = @yaml_parse_file($this->path);
+				$parsed = yaml_parse_file($this->path);
 				if(is_array($parsed)){
 					$playerData = array_merge($playerData, $parsed);
 				}
 			}
 
-			@yaml_emit_file($this->path, $playerData);
+			yaml_emit_file($this->path, $playerData);
 
 			return [
 				'data' => $playerData,

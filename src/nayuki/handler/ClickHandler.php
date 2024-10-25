@@ -19,17 +19,15 @@ final class ClickHandler{
 	}
 
 	public function addClick(Player $player) : void{
-		$session = $this->main->getSessionManager()->getSession($player);
 		$playerCps = $this->getClicks($player);
-
-		if($session->isCpsCounterEnabled()){
-			$player->sendTip(TextFormat::AQUA . 'CPS: ' . TextFormat::WHITE . $playerCps);
-		}
 
 		$clickData = $this->clickData[$player] ?? [];
 		array_unshift($clickData, microtime(true));
-		$clickData = array_slice($clickData, 0, 50);
-		$this->clickData[$player] = $clickData;
+		$this->clickData[$player] = array_slice($clickData, 0, 50);
+
+		if($this->main->getSessionManager()->getSession($player)->isCpsCounterEnabled()){
+			$player->sendTip(TextFormat::AQUA . 'CPS: ' . TextFormat::WHITE . $playerCps);
+		}
 	}
 
 	public function getClicks(Player $player) : int{
