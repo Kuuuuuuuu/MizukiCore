@@ -71,7 +71,6 @@ final class Main extends PluginBase{
 		return $this->playerHandler;
 	}
 
-
 	public static function getPlayerDataPath() : string{
 		return self::getInstance()->getDataFolder() . 'player/';
 	}
