@@ -295,7 +295,9 @@ final readonly class Listener implements PMListener{
 	public function onDamageEvent(EntityDamageEvent $event) : void{
 		if($event->getCause() === EntityDamageEvent::CAUSE_FALL){
 			$event->cancel();
+			return;
 		}
+
 		if($event->getCause() === EntityDamageEvent::CAUSE_ENTITY_ATTACK){
 			/** @var EntityDamageByEntityEvent $event */
 			$damager = $event->getDamager();
