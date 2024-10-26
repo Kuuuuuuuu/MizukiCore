@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace nayuki\tasks\async;
 
 use Exception;
+use nayuki\Constants;
 use nayuki\Main;
 use nayuki\player\scoreboard\Scoreboard;
 use pocketmine\player\Player;
@@ -92,6 +93,6 @@ final class AsyncLoadPlayerData extends AsyncTask{
 		Scoreboard::spawn($player);
 
 		$loadTime = round($result['time'], 3);
-		$player->sendMessage(Main::PREFIX . "Your data has been loaded. ({$loadTime}s)");
+		$player->sendMessage(Constants::PREFIX . "Your data has been loaded. ({$loadTime}s)");
 	}
 }

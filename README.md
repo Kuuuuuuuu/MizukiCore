@@ -8,3 +8,5 @@
 
 - [ ] Add more kits, skills, etc.
 - [ ] Clean up code
+- [ ] MySQL / SQLite support
+- [ ] Add more features?

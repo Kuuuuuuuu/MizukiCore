@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace nayuki\player\kit\types;
 
+use nayuki\Constants;
 use nayuki\Main;
 use nayuki\player\kit\BaseKit;
 use nayuki\Utils;
@@ -65,7 +66,7 @@ final class Stealth extends BaseKit{
 
 		if($now - $previousCooldown < self::$skillCooldown){
 			$remaining = self::$skillCooldown - round($now - $previousCooldown);
-			$player->sendMessage(Main::PREFIX . TextFormat::RED . "กรุณารอสกิลนี้ใช้งานใหม่อีกครั้งในอีก $remaining วินาที");
+			$player->sendMessage(Constants::PREFIX . TextFormat::RED . "กรุณารอสกิลนี้ใช้งานใหม่อีกครั้งในอีก $remaining วินาที");
 			return;
 		}
 

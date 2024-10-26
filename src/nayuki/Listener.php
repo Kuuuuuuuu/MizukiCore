@@ -66,9 +66,9 @@ final readonly class Listener implements PMListener{
 		$this->main->getPlayerHandler()->giveLobbyItems($player);
 
 		$lobby = new Vector3(
-			$this->main::LOBBY_COORDS['x'],
-			$this->main::LOBBY_COORDS['y'],
-			$this->main::LOBBY_COORDS['z']
+			Constants::LOBBY_COORDS['x'],
+			Constants::LOBBY_COORDS['y'],
+			Constants::LOBBY_COORDS['z']
 		);
 
 		$player->setSpawn($lobby);
@@ -286,7 +286,7 @@ final readonly class Listener implements PMListener{
 
 		Utils::playSound("random.orb", $shooter);
 		$health = round($hitEntity->getHealth(), 2);
-		$shooter->sendMessage(Main::PREFIX . TextFormat::WHITE . $hitEntity->getName() . TextFormat::RED . " HP: $health");
+		$shooter->sendMessage(Constants::PREFIX . TextFormat::WHITE . $hitEntity->getName() . TextFormat::RED . " HP: $health");
 	}
 
 	/**

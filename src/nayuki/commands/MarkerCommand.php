@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace nayuki\commands;
 
+use nayuki\Constants;
 use nayuki\entities\Marker;
 use nayuki\Main;
 use pocketmine\command\Command;
@@ -21,7 +22,7 @@ final class MarkerCommand extends Command{
 
 	public function execute(CommandSender $sender, string $commandLabel, array $args) : void{
 		if(!$sender instanceof Player){
-			$sender->sendMessage(Main::PREFIX . TextFormat::RED . 'You can only use this command in-Game!');
+			$sender->sendMessage(Constants::PREFIX . TextFormat::RED . 'You can only use this command in-Game!');
 			return;
 		}
 
@@ -35,7 +36,7 @@ final class MarkerCommand extends Command{
 					if(isset($args[1])){
 						$this->spawn($sender, $args[1]);
 					}else{
-						$sender->sendMessage(Main::PREFIX . TextFormat::RED . 'Usage: /marker spawn <kit>');
+						$sender->sendMessage(Constants::PREFIX . TextFormat::RED . 'Usage: /marker spawn <kit>');
 					}
 					break;
 				case 'delete':
@@ -43,12 +44,12 @@ final class MarkerCommand extends Command{
 						$entity = $this->main->getServer()->getWorldManager()->findEntity((int) $args[1]);
 						if($entity instanceof Marker){
 							$entity->close();
-							$sender->sendMessage(Main::PREFIX . TextFormat::GREEN . 'Marker removed successfully!');
+							$sender->sendMessage(Constants::PREFIX . TextFormat::GREEN . 'Marker removed successfully!');
 						}else{
-							$sender->sendMessage(Main::PREFIX . TextFormat::YELLOW . 'Marker not found!');
+							$sender->sendMessage(Constants::PREFIX . TextFormat::YELLOW . 'Marker not found!');
 						}
 					}else{
-						$sender->sendMessage(Main::PREFIX . TextFormat::RED . 'Usage: /marker remove <id>');
+						$sender->sendMessage(Constants::PREFIX . TextFormat::RED . 'Usage: /marker remove <id>');
 					}
 					break;
 				case 'list':
@@ -58,13 +59,13 @@ final class MarkerCommand extends Command{
 							$entityNames[] = 'ID: ' . $entity->getId() . ' | Text: ' . $entity->getText();
 						}
 					}
-					$sender->sendMessage(Main::PREFIX . TextFormat::GREEN . 'Markers: ' . count($entityNames) . "\n" . implode("\n", $entityNames));
+					$sender->sendMessage(Constants::PREFIX . TextFormat::GREEN . 'Markers: ' . count($entityNames) . "\n" . implode("\n", $entityNames));
 					break;
 				case 'help':
 					$sender->sendMessage('/marker spawn <kit> | /marker delete <id> | /marker list');
 					break;
 				default:
-					$sender->sendMessage(Main::PREFIX . TextFormat::RED . "Subcommand '$args[0]' not found! Try '/marker help' for help.");
+					$sender->sendMessage(Constants::PREFIX . TextFormat::RED . "Subcommand '$args[0]' not found! Try '/marker help' for help.");
 					break;
 			}
 		}
@@ -75,6 +76,6 @@ final class MarkerCommand extends Command{
 		$entity = new Marker($pos, CompoundTag::create()->setString('text', $text));
 		$entity->spawnToAll();
 
-		$player->sendMessage(Main::PREFIX . TextFormat::GREEN . 'Marker spawned successfully! ID: ' . $entity->getId());
+		$player->sendMessage(Constants::PREFIX . TextFormat::GREEN . 'Marker spawned successfully! ID: ' . $entity->getId());
 	}
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace nayuki\commands;
 
+use nayuki\Constants;
 use nayuki\entities\NPC;
 use nayuki\Main;
 use nayuki\player\kit\BaseKit;
@@ -26,7 +27,7 @@ final class NPCCommand extends Command{
 
 	public function execute(CommandSender $sender, string $commandLabel, array $args) : void{
 		if(!$sender instanceof Player){
-			$sender->sendMessage(Main::PREFIX . TextFormat::RED . 'You can only use this command in-Game!');
+			$sender->sendMessage(Constants::PREFIX . TextFormat::RED . 'You can only use this command in-Game!');
 			return;
 		}
 
@@ -40,12 +41,12 @@ final class NPCCommand extends Command{
 					if(isset($args[1])){
 						$kit = KitRegistry::fromString($args[1]);
 						if($kit === false){
-							$sender->sendMessage(Main::PREFIX . TextFormat::RED . 'Kit not found!');
+							$sender->sendMessage(Constants::PREFIX . TextFormat::RED . 'Kit not found!');
 							return;
 						}
 						$this->spawn($sender, $kit);
 					}else{
-						$sender->sendMessage(Main::PREFIX . TextFormat::RED . 'Usage: /npc spawn <kit>');
+						$sender->sendMessage(Constants::PREFIX . TextFormat::RED . 'Usage: /npc spawn <kit>');
 					}
 					break;
 				case 'delete':
@@ -53,12 +54,12 @@ final class NPCCommand extends Command{
 						$entity = $this->main->getServer()->getWorldManager()->findEntity((int) $args[1]);
 						if($entity instanceof NPC){
 							$entity->destroy();
-							$sender->sendMessage(Main::PREFIX . TextFormat::GREEN . 'NPC removed successfully!');
+							$sender->sendMessage(Constants::PREFIX . TextFormat::GREEN . 'NPC removed successfully!');
 						}else{
-							$sender->sendMessage(Main::PREFIX . TextFormat::YELLOW . 'NPC not found!');
+							$sender->sendMessage(Constants::PREFIX . TextFormat::YELLOW . 'NPC not found!');
 						}
 					}else{
-						$sender->sendMessage(Main::PREFIX . TextFormat::RED . 'Usage: /npc remove <id>');
+						$sender->sendMessage(Constants::PREFIX . TextFormat::RED . 'Usage: /npc remove <id>');
 					}
 					break;
 				case 'list':
@@ -68,13 +69,13 @@ final class NPCCommand extends Command{
 							$entityNames[] = 'ID: ' . $entity->getId() . ' | Kit: ' . $entity->getKit()->getName();
 						}
 					}
-					$sender->sendMessage(Main::PREFIX . TextFormat::GREEN . 'NPCs: ' . count($entityNames) . "\n" . implode("\n", $entityNames));
+					$sender->sendMessage(Constants::PREFIX . TextFormat::GREEN . 'NPCs: ' . count($entityNames) . "\n" . implode("\n", $entityNames));
 					break;
 				case 'help':
 					$sender->sendMessage('/npc spawn <kit> | /npc delete <id> | /npc list');
 					break;
 				default:
-					$sender->sendMessage(Main::PREFIX . TextFormat::RED . "Subcommand '$args[0]' not found! Try '/npc help' for help.");
+					$sender->sendMessage(Constants::PREFIX . TextFormat::RED . "Subcommand '$args[0]' not found! Try '/npc help' for help.");
 					break;
 			}
 		}
@@ -106,6 +107,6 @@ final class NPCCommand extends Command{
 		$entity = new NPC($pos, $player->getSkin(), $nbt);
 		$entity->spawnToAll();
 
-		$player->sendMessage(Main::PREFIX . TextFormat::GREEN . 'NPC spawned successfully! ID: ' . $entity->getId());
+		$player->sendMessage(Constants::PREFIX . TextFormat::GREEN . 'NPC spawned successfully! ID: ' . $entity->getId());
 	}
 }

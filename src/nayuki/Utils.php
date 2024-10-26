@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace nayuki;
 
+use nayuki\Constants;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\player\Player;
@@ -29,7 +30,7 @@ final class Utils{
 	}
 
 	public static function randomArenaSpawnCoords() : Vector3{
-		$coords = Main::ARENA_LOBBY_COORDS[array_rand(Main::ARENA_LOBBY_COORDS)];
+		$coords = Constants::ARENA_LOBBY_COORDS[array_rand(Constants::ARENA_LOBBY_COORDS)];
 		[$x, $y, $z] = explode(':', $coords);
 		return new Vector3((int) $x, (int) $y + 1.5, (int) $z);
 	}

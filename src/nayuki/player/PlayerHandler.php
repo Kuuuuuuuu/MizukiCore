@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace nayuki\player;
 
+use nayuki\Constants;
 use nayuki\entities\FishingHook;
 use nayuki\Main;
 use nayuki\player\kit\KitRegistry;
@@ -49,10 +50,11 @@ final readonly class PlayerHandler{
 
 		// Reset player
 		$player->setHealth(20);
+
 		$player->teleport(new Vector3(
-			$this->main::LOBBY_COORDS['x'],
-			$this->main::LOBBY_COORDS['y'],
-			$this->main::LOBBY_COORDS['z']
+			Constants::LOBBY_COORDS['x'],
+			Constants::LOBBY_COORDS['y'],
+			Constants::LOBBY_COORDS['z']
 		));
 
 		Scoreboard::spawn($player);

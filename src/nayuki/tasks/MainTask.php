@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace nayuki\tasks;
 
+use nayuki\Constants;
 use nayuki\Main;
 use nayuki\misc\AbstractTask;
 use nayuki\Utils;
@@ -57,7 +58,7 @@ final class MainTask extends AbstractTask{
 			return;
 		}
 
-		foreach($this->main::GOLDEN_APPLE_DROP_COORDS as $coord){
+		foreach(Constants::GOLDEN_APPLE_DROP_COORDS as $coord){
 			[$x, $y, $z] = explode(':', $coord);
 			$location = new Vector3((int) $x, (int) $y + 2, (int) $z);
 			$defaultWorld->dropItem($location, VanillaItems::GOLDEN_APPLE()->setCount(1));

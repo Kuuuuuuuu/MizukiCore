@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace nayuki\commands;
 
+use nayuki\Constants;
 use nayuki\entities\Leaderboard;
-use nayuki\Main;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\nbt\tag\CompoundTag;
@@ -26,7 +26,7 @@ final class LeaderboardCommand extends Command{
 
 	public function execute(CommandSender $sender, string $commandLabel, array $args) : void{
 		if(!$sender instanceof Player){
-			$sender->sendMessage(Main::PREFIX . TextFormat::RED . 'You can only use this command in-Game!');
+			$sender->sendMessage(Constants::PREFIX . TextFormat::RED . 'You can only use this command in-Game!');
 			return;
 		}
 
@@ -38,14 +38,14 @@ final class LeaderboardCommand extends Command{
 			switch(strtolower($args[0])){
 				case 'spawn':
 					if(!isset($args[1])){
-						$sender->sendMessage(Main::PREFIX . TextFormat::RED . 'Usage: /leaderboard spawn <type>');
+						$sender->sendMessage(Constants::PREFIX . TextFormat::RED . 'Usage: /leaderboard spawn <type>');
 						return;
 					}
 					if(in_array($args[1], ['kills', 'deaths'], true)){
 						$this->spawn($sender, $args[1]);
 						return;
 					}
-					$sender->sendMessage(Main::PREFIX . TextFormat::RED . 'Usage: /leaderboard spawn <kills|deaths>');
+					$sender->sendMessage(Constants::PREFIX . TextFormat::RED . 'Usage: /leaderboard spawn <kills|deaths>');
 					break;
 				case 'remove-all':
 					foreach($sender->getWorld()->getEntities() as $entity){
@@ -58,7 +58,7 @@ final class LeaderboardCommand extends Command{
 					$sender->sendMessage('/leaderboard spawn <kills|deaths> | /leaderboard remove-all');
 					break;
 				default:
-					$sender->sendMessage(Main::PREFIX . TextFormat::RED . "Subcommand '$args[0]' not found! Try '/leaderboard help' for help.");
+					$sender->sendMessage(Constants::PREFIX . TextFormat::RED . "Subcommand '$args[0]' not found! Try '/leaderboard help' for help.");
 					break;
 			}
 		}
@@ -69,6 +69,6 @@ final class LeaderboardCommand extends Command{
 		$entity->setNameTagAlwaysVisible();
 		$entity->spawnToAll();
 
-		$player->sendMessage(Main::PREFIX . TextFormat::GREEN . 'Leaderboard' . ' created successfully! ID: ' . $entity->getId());
+		$player->sendMessage(Constants::PREFIX . TextFormat::GREEN . 'Leaderboard' . ' created successfully! ID: ' . $entity->getId());
 	}
 }
