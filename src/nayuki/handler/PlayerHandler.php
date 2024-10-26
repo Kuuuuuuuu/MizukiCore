@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace nayuki\player;
+namespace nayuki\handler;
 
 use nayuki\Constants;
 use nayuki\entities\FishingHook;

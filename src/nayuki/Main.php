@@ -14,7 +14,7 @@ use nayuki\entities\Leaderboard;
 use nayuki\entities\Marker;
 use nayuki\entities\NPC;
 use nayuki\handler\ClickHandler;
-use nayuki\player\PlayerHandler;
+use nayuki\handler\PlayerHandler;
 use nayuki\player\session\SessionManager;
 use nayuki\tasks\MainTask;
 use pocketmine\entity\EntityDataHelper;
