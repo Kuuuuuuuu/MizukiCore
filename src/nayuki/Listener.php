@@ -286,7 +286,7 @@ final readonly class Listener implements PMListener{
 
 		Utils::playSound("random.orb", $shooter);
 		$health = round($hitEntity->getHealth(), 2);
-		$shooter->sendMessage(Main::PREFIX . TextFormat::WHITE . $hitEntity->getName() . TextFormat::RED . "HP: $health");
+		$shooter->sendMessage(Main::PREFIX . TextFormat::WHITE . $hitEntity->getName() . TextFormat::RED . " HP: $health");
 	}
 
 	/**
