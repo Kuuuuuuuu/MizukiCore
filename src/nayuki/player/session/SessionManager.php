@@ -9,7 +9,7 @@ use WeakMap;
 
 final class SessionManager{
 
-	/** @var WeakMap<string, Session> */
+	/** @var WeakMap<Player, Session> */
 	private WeakMap $sessions;
 
 	public function __construct(){
@@ -17,15 +17,15 @@ final class SessionManager{
 	}
 
 	public function getSession(Player $player) : Session{
-		return $this->sessions[spl_object_hash($player)] ??= new Session($player);
+		return $this->sessions[$player] ??= new Session($player);
 	}
 
 	public function removeSession(Player $player) : void{
-		unset($this->sessions[spl_object_hash($player)]);
+		unset($this->sessions[$player]);
 	}
 
 	/**
-	 * @return WeakMap<string, Session>
+	 * @return WeakMap<Player, Session>
 	 */
 	public function getSessions() : WeakMap{
 		return $this->sessions;
