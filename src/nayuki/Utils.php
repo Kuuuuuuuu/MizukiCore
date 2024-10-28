@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace nayuki;
 
-use nayuki\Constants;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\PlaySoundPacket;
 use pocketmine\player\Player;
