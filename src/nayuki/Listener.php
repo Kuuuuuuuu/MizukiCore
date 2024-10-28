@@ -234,7 +234,7 @@ final readonly class Listener implements PMListener{
 
 		if($item->getTypeId() === ItemTypeIds::FISHING_ROD){
 			$this->spawnFishingHook($player);
-		}else{
+		}elseif($item->hasCustomName()){
 			$session->getCurrentKit()?->handleItemSkill($player, $item);
 		}
 	}
