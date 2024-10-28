@@ -74,7 +74,7 @@ final class BomberTNT extends PrimedTNT{
 				$entity->attack($ev);
 			}
 
-			$entity->setMotion($entity->getMotion()->addVector($motion->multiply($impact * 0.785)));
+			$entity->setMotion($entity->getMotion()->addVector($motion->multiply($impact * 0.962)));
 		}
 	}
 }
