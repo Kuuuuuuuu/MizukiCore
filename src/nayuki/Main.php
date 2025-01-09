@@ -25,8 +25,8 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\utils\SingletonTrait;
 use pocketmine\utils\TextFormat;
 use pocketmine\world\World;
-use poggit\libasynql\DataConnector;
-use poggit\libasynql\libasynql;
+//use poggit\libasynql\DataConnector;
+//use poggit\libasynql\libasynql;
 
 final class Main extends PluginBase{
 	use SingletonTrait;
@@ -34,7 +34,7 @@ final class Main extends PluginBase{
 	private SessionManager $sessionManager;
 	private ClickHandler $clickHandler;
 	private PlayerHandler $playerHandler;
-	private DataConnector $database;
+	//private DataConnector $database;
 
 	public function getSessionManager() : SessionManager{
 		return $this->sessionManager;
@@ -78,18 +78,18 @@ final class Main extends PluginBase{
 			new MarkerCommand($this)
 		]);
 
-		$this->database = libasynql::create($this, $this->getConfig()->get('database'), [
-			'mysql' => '/db/mysql.sql',
-			'sqlite' => '/db/sqlite.sql'
-		]);
+		//$this->database = libasynql::create($this, $this->getConfig()->get('database'), [
+		//	'mysql' => '/db/mysql.sql',
+		//	'sqlite' => '/db/sqlite.sql'
+		//]);
 	}
 
 	public function onDisable() : void{
 		$this->getLogger()->info(TextFormat::DARK_RED . 'disabled!');
 
-		if(isset($this->database)){
-			$this->database->close();
-		}
+		//if(isset($this->database)){
+		//	$this->database->close();
+		//}
 
 		foreach($this->getServer()->getOnlinePlayers() as $player){
 			$player->kick(TextFormat::RED . 'Server is restarting...');
