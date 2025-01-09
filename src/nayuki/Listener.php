@@ -114,12 +114,13 @@ final readonly class Listener implements PMListener{
 	public function onDataPacketReceiveEvent(DataPacketReceiveEvent $event) : void{
 		$player = $event->getOrigin()->getPlayer();
 		$packet = $event->getPacket();
+
 		if(!($player instanceof Player)){
 			return;
 		}
 
 		if(
-			($packet instanceof PlayerAuthInputPacket && $packet->hasFlag(PlayerAuthInputFlags::MISSED_SWING)) ||
+			($packet instanceof PlayerAuthInputPacket && $packet->getInputFlags() === PlayerAuthInputFlags::MISSED_SWING) ||
 			($packet instanceof InventoryTransactionPacket && $packet->trData instanceof UseItemOnEntityTransactionData)
 		){
 			$this->main->getClickHandler()->addClick($player);
