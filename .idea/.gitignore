@@ -7,3 +7,6 @@
 /dataSources/
 /dataSources.local.xml
 /discord.xml
+/vcs.xml
+/codeception.xml
+/php.xml
